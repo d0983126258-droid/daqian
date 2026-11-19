@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>大千世界</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=Ma+Shan+Zheng&display=swap">
+<style>
+/* Layout: field-journal pages on a desk. Sticky HUD strip, journal-tab nav, paper cards, ink-sketch scene banner, stamp toasts. */
+:root{--desk:#c4cbb3;--paper:#eef0e0;--paper2:#e1e5cc;--ink:#26303a;--mute:#5f6a58;--leaf:#2f7050;--leaf-ink:#f4f7ea;--stamp:#a83f2d;--gold:#8f6a12;--line:#b9bd9f;
+--c:#4f5a63;--u:#2f7050;--r:#2a5f9a;--e:#7a46a3;--m:#a85a14;--x:#a83f2d;
+--display:"Noto Serif TC","Songti TC",serif;--hand:"Ma Shan Zheng","Noto Serif TC",cursive;--body:"Noto Sans TC","PingFang TC",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--desk:#0f1411;--paper:#1c2420;--paper2:#26302a;--ink:#e6eAD6;--mute:#98a48d;--leaf:#8cc9a2;--leaf-ink:#12201a;--stamp:#e48a74;--gold:#dcb85e;--line:#38443b;--c:#b4bfb0;--u:#8fd0a8;--r:#86b4f0;--e:#c9a0f0;--m:#f0b070;--x:#f08a80;color-scheme:dark}}
+:root[data-theme="dark"]{--desk:#0f1411;--paper:#1c2420;--paper2:#26302a;--ink:#e6eAD6;--mute:#98a48d;--leaf:#8cc9a2;--leaf-ink:#12201a;--stamp:#e48a74;--gold:#dcb85e;--line:#38443b;--c:#b4bfb0;--u:#8fd0a8;--r:#86b4f0;--e:#c9a0f0;--m:#f0b070;--x:#f08a80;color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--desk)}
+body{background:var(--desk);color:var(--ink);font:15px/1.7 var(--body);padding-block:0 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:780px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;color:var(--ink)}
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border:1px solid var(--line);border-top:0;border-radius:0 0 6px 6px;padding:10px 14px 10px;margin-bottom:14px;box-shadow:0 2px 0 var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.hud .row{display:flex;gap:4px 14px;flex-wrap:wrap;align-items:baseline;justify-content:space-between}
+.brand{font-family:var(--hand);font-size:26px;letter-spacing:.1em;color:var(--stamp);line-height:1.2}
+.pos{color:var(--mute);font-size:13px;font-variant-numeric:tabular-nums}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-top:6px}
+.bar{min-width:0}.bar small{display:flex;justify-content:space-between;color:var(--mute);font-size:12px;font-variant-numeric:tabular-nums}
+.bar i{display:block;height:7px;border:1px solid var(--line);background:var(--paper2);border-radius:4px;overflow:hidden;margin-top:2px}
+.bar b{display:block;height:100%;background:var(--leaf)}.bar.x b{background:var(--gold)}.bar.low b{background:var(--stamp)}
+.stats{display:flex;gap:2px 14px;flex-wrap:wrap;margin-top:6px;font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+.stats b{color:var(--ink);font-weight:700}
+nav{display:flex;gap:6px;margin-bottom:0;padding-left:4px}
+nav button{background:var(--paper2);border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;color:var(--mute);padding:7px 16px;font:inherit;cursor:pointer;margin-bottom:-1px;position:relative;top:1px}
+nav button.on{background:var(--paper);color:var(--ink);font-weight:700;z-index:1}
+main{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px;min-height:60vh}
+.card{background:var(--paper2);border:1px solid var(--line);border-radius:4px;padding:12px 14px;margin-bottom:12px}
+.card h2{font-size:19px;margin-bottom:2px}.card h3{font-size:16px;margin-bottom:6px}
+.sub{color:var(--mute);font-size:13px;margin:0 0 10px;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.btn{font:inherit;background:var(--paper);color:var(--ink);border:1px solid var(--ink);border-radius:3px;padding:9px 12px;cursor:pointer;text-align:left;min-width:0;box-shadow:2px 2px 0 var(--line);transition:transform .08s}
+.btn:hover:not(:disabled){border-color:var(--leaf);color:var(--leaf)}
+.btn:active:not(:disabled){transform:translate(1px,1px);box-shadow:1px 1px 0 var(--line)}
+.btn:focus-visible,nav button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;border-style:dashed}
+.btn small{display:block;color:var(--mute);font-size:12px;line-height:1.5}
+.btn.pri{background:var(--leaf);color:var(--leaf-ink);border-color:var(--leaf)}.btn.pri small{color:inherit;opacity:.85}.btn.pri:hover:not(:disabled){color:var(--leaf-ink);filter:brightness(1.08)}
+.btn.warn{border-color:var(--stamp);color:var(--stamp)}
+.list{display:flex;flex-direction:column}
+.item{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:7px 0;border-bottom:1px dashed var(--line)}
+.item:last-child{border:0}.item>span{min-width:0;flex:1 1 150px}
+.item .acts{display:flex;gap:6px;flex-wrap:wrap;flex:0 0 auto}.item .btn{padding:3px 10px;font-size:13px;box-shadow:none}
+.tag{display:inline-block;font-size:11px;padding:0 6px;border-radius:2px;border:1px solid var(--line);color:var(--mute);margin-left:4px;line-height:1.6}
+.r-c{color:var(--c)}.r-u{color:var(--u)}.r-r{color:var(--r)}.r-e{color:var(--e)}.r-m{color:var(--m)}.r-x{color:var(--x)}
+.scene{position:relative;border:1px solid var(--ink);border-radius:3px;overflow:hidden;margin-bottom:12px;box-shadow:3px 3px 0 var(--line)}
+.scene svg{display:block;width:100%;height:auto;aspect-ratio:300/120;max-height:210px}
+.scene .cap{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:14px 10px 6px;color:#fff;font-size:12px;background:linear-gradient(transparent,#000a);text-shadow:0 1px 2px #000}
+.scene .cap b{font-family:var(--hand);font-size:20px;font-weight:400;letter-spacing:.06em}
+.log{font-size:14px;display:flex;flex-direction:column;gap:2px;font-family:var(--hand);font-size:16px;line-height:1.6}.log p{margin:0;color:var(--mute)}.log p:first-child{color:var(--ink)}
+.dex{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.dc{position:relative;background:var(--paper);border:1px solid var(--ink);border-radius:2px;padding:14px 10px 10px;min-width:0;box-shadow:2px 2px 0 var(--line)}
+.dc::before{content:"";position:absolute;top:-6px;left:50%;width:42px;height:12px;margin-left:-21px;background:var(--line);opacity:.8;transform:rotate(-2deg)}
+.dc.lock{border-style:dashed;box-shadow:none;background:transparent}.dc.lock b{color:var(--mute)}
+.dc b{font-family:var(--display);font-size:16px}.dc .dp{margin:4px 0 0;font-size:12px;color:var(--mute);line-height:1.55}
+.dc{font:inherit;color:var(--ink);text-align:left;cursor:pointer;display:block;width:100%}.dc:hover:not(.lock){border-color:var(--leaf)}.dc:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.sheet.dtl{text-align:left;max-width:460px;max-height:86vh;overflow:auto;border-color:var(--ink)}.dtl h2{font-family:var(--display);font-size:26px;letter-spacing:.04em}
+.dtl h2.r-c{color:var(--c)}.dtl h2.r-u{color:var(--u)}.dtl h2.r-r{color:var(--r)}.dtl h2.r-e{color:var(--e)}.dtl h2.r-m{color:var(--m)}.dtl h2.r-x{color:var(--x)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:10px 0;font-size:14px}dt{color:var(--mute);font-size:13px;white-space:nowrap}dd{margin:0;min-width:0}.rd{margin:0}
+.no{display:block;font-size:11px;letter-spacing:.12em;color:var(--mute);font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.chips .btn{padding:2px 10px;font-size:13px;box-shadow:none}.chips .btn.on{border-color:var(--leaf);color:var(--leaf);font-weight:700}
+.alert{border-color:var(--stamp);border-width:2px}
+.plot{border:1px dashed var(--ink);border-radius:3px;padding:8px;font-size:13px;min-height:64px;background:var(--paper)}
+ul.rules{padding-left:18px;margin:6px 0}ul.rules li{margin:5px 0}
+.mute{color:var(--mute)}
+#toasts{position:fixed;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:15;padding:0 16px}
+.toast{background:var(--paper);color:var(--ink);border:1px solid var(--ink);border-radius:3px;padding:6px 14px;font-size:14px;box-shadow:3px 3px 0 var(--line);max-width:min(520px,100%);animation:in .25s ease-out}
+.toast.dex{border:2px solid var(--stamp);color:var(--stamp);font-family:var(--hand);font-size:20px;transform:rotate(-1.5deg);letter-spacing:.06em}
+.toast.lv,.toast.sp{border:2px solid var(--gold);font-weight:700}
+.toast.gain{color:var(--leaf)}
+.toast.out{opacity:0;transition:opacity .5s}
+#cut:has(.title){background:#000e}
+#cut .title{text-align:center;padding:44px 20px 28px;max-width:420px;width:100%}
+.title h1{font-family:var(--hand);font-size:clamp(46px,16vw,76px);letter-spacing:.1em;white-space:nowrap;margin:10px 0 6px;color:var(--ink);line-height:1.1}
+.title .tsub{letter-spacing:.4em;color:var(--stamp);font-size:14px}
+.title .tline{height:2px;width:60%;margin:8px auto 18px;background:var(--stamp);opacity:.6}
+.title .tdesc{color:var(--mute);line-height:1.9;margin:0 0 26px}
+.title .tver{margin-top:18px;font-size:11px;color:var(--mute)}
+@keyframes mtb{from{width:100%}to{width:0}}
+.mtbar i{background:var(--stamp);animation:mtb var(--d,2s) linear forwards;width:100%}
+.mtwarn{font-size:20px;font-weight:700;margin:6px 0;color:var(--stamp)}
+body.fog #hud,body.fog #nav,body.fog #toasts,body.fog #main>*:not(.fogcard){filter:blur(6px);transition:filter .4s}
+.fogcard{background:linear-gradient(#f4f6f8,#dfe5ea)!important;color:#2b3036}
+.fogtxt{filter:blur(4px)}
+#fx .blk{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;animation:blkio 2.1s ease-in-out forwards}
+#fx .blk b{font:400 clamp(54px,18vw,92px)/1.1 var(--hand);color:#e8d9c0;letter-spacing:.12em;opacity:0;text-shadow:0 0 22px #8a5a2b;animation:rumb .9s ease-out forwards}
+#fx .blk .b2{animation-delay:.9s;font-size:clamp(64px,22vw,112px);color:#f0b070}
+@keyframes blkio{0%{opacity:0}12%{opacity:1}88%{opacity:1}100%{opacity:0}}
+@keyframes rumb{0%{opacity:0;transform:scale(.4)}25%{opacity:1;transform:scale(1.3) translate(-8px,5px)}40%{transform:scale(1.15) translate(8px,-5px)}55%{transform:scale(1.22) translate(-5px,3px)}100%{opacity:1;transform:scale(1)}}
+.qbar{position:relative;height:52px;border-radius:10px;background:#cdd5db;overflow:hidden;border:2px solid #2b3036}
+.qz{position:absolute;top:0;bottom:0;background:#2f9a5fcc;border-left:2px solid #1f7a45;border-right:2px solid #1f7a45}
+.qz.fk{background:#6fc59a55;border-color:#6fc59a88}
+.qmk{position:absolute;top:-4px;bottom:-4px;width:8px;margin-left:-4px;background:#2b3036;border-radius:4px;left:0}
+.qmist{position:absolute;inset:-14px;pointer-events:none;opacity:0;filter:blur(7px);background:radial-gradient(ellipse at 22% 50%,#fffffff2 0,#fff0 62%),radial-gradient(ellipse at 52% 45%,#ffffffee 0,#fff0 58%),radial-gradient(ellipse at 82% 55%,#fffffff2 0,#fff0 62%)}
+body.fog #hud,body.fog #nav,body.fog #toasts,body.fog #main>*:not(.fogcard){filter:blur(7px);transition:filter .5s}
+#fogveil{position:fixed;inset:0;background:#fff;z-index:30;pointer-events:none;opacity:0}
+body.quake #hud,body.quake #nav,body.quake #main:not(.shake):not(.bigshake){animation:qk .22s linear infinite}
+@keyframes qk{0%{transform:translate(0,0)}20%{transform:translate(calc(var(--qa,4px)*-1),calc(var(--qa,4px)*.6))}40%{transform:translate(var(--qa,4px),calc(var(--qa,4px)*-.5))}60%{transform:translate(calc(var(--qa,4px)*-.7),calc(var(--qa,4px)*-.6))}80%{transform:translate(calc(var(--qa,4px)*.8),calc(var(--qa,4px)*.4))}100%{transform:translate(0,0)}}
+@media (prefers-reduced-motion:reduce){body.quake #hud,body.quake #nav,body.quake #main{animation:none!important}}
+#blinkv{position:fixed;inset:0;background:#000;z-index:40;pointer-events:none;opacity:0;transition:opacity .1s}
+#fx .blk.bat b{font-size:clamp(46px,15vw,78px);letter-spacing:.05em;color:#cfe9ff;text-shadow:0 0 22px #3a7fb5}#fx .blk.bat .b2{color:#9fd0ff;font-size:clamp(46px,15vw,78px)}
+#fx .sq{position:absolute;left:0;right:0;top:32%;text-align:center;font:400 clamp(40px,12vw,58px)/1.2 var(--hand);color:#ff3b30;letter-spacing:.04em;text-shadow:0 0 20px #000,0 0 40px #a00;animation:sqa .95s ease-out forwards}
+@keyframes sqa{0%{opacity:0;transform:scale(.6)}20%{opacity:1;transform:scale(1.15)}60%{opacity:1}100%{opacity:0;transform:scale(1)}}
+#sonar{position:fixed;left:50%;top:48%;width:0;height:0;z-index:35;pointer-events:none}
+#sonar i{position:absolute;left:-10px;top:-10px;width:20px;height:20px;border-radius:50%;border:3px solid #9fd0ff;box-shadow:0 0 14px #3a7fb5;opacity:0;animation:snr .95s ease-out forwards}
+#sonar i:nth-child(2){animation-delay:.18s}#sonar i:nth-child(3){animation-delay:.36s}
+@keyframes snr{0%{transform:scale(1);opacity:.9}100%{transform:scale(26);opacity:0}}
+#over[hidden],#cut[hidden]{display:none!important}
+#over,#cut{position:fixed;inset:0;display:grid;place-items:center;background:#000a;z-index:20;padding:16px}
+.sheet{max-width:420px;border:2px solid var(--stamp);background:var(--paper);text-align:center;padding:20px}
+.sheet h2{font-family:var(--hand);font-size:34px;color:var(--stamp);font-weight:400;letter-spacing:.1em}
+@keyframes met{from{stroke-dashoffset:60;opacity:1;transform:translate(40px,-30px)}to{stroke-dashoffset:-60;opacity:0;transform:translate(-20px,15px)}}
+.meteor{stroke-dasharray:60;animation:met 1.2s ease-out both}
+.tugbar{height:16px;border:1px solid var(--ink);border-radius:8px;background:var(--paper);overflow:hidden;margin:8px 0}.tugbar i{display:block;height:100%;background:var(--leaf);width:0}.tugbar.t i{background:var(--stamp);width:100%;transform-origin:left;animation:shrink 5s linear forwards}
+@keyframes shrink{to{transform:scaleX(0)}}
+.big{width:100%;text-align:center;font-size:20px;padding:18px 12px;touch-action:manipulation;user-select:none}
+.dlg{display:flex;gap:12px;align-items:flex-start;margin:4px 0 12px}
+.av{flex:0 0 52px;width:52px;height:52px;border-radius:50%;border:2px solid var(--ink);background:var(--paper);display:grid;place-items:center;font-family:var(--hand);font-size:30px;color:var(--stamp)}
+.bub{position:relative;flex:1;min-width:0;background:var(--paper);border:1px solid var(--ink);border-radius:3px 14px 14px 14px;padding:8px 14px 10px;box-shadow:3px 3px 0 var(--line)}
+.bub::before{content:"";position:absolute;left:-9px;top:12px;border:8px solid transparent;border-left:0;border-right:9px solid var(--ink)}
+.bub b{display:block;font-family:var(--display);font-size:13px;color:var(--mute);letter-spacing:.12em}
+.bub p{margin:2px 0 0;font-size:15.5px;line-height:1.85}
+body.hit::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 90px 24px rgba(205,45,35,.6);animation:hitf .7s ease-out forwards;z-index:12}
+@keyframes hitf{from{opacity:1}to{opacity:0}}
+.shake{animation:shk .35s linear}
+body.rkw::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:12;box-shadow:inset 0 0 80px 20px rgba(230,120,30,.55);animation:rkp .33s ease-in-out 3}
+@keyframes rkp{50%{opacity:.1}}
+.bigshake{animation:bshk .55s linear}@keyframes bshk{10%{transform:translate(-9px,5px)}25%{transform:translate(8px,-6px)}40%{transform:translate(-7px,-4px)}55%{transform:translate(6px,5px)}70%{transform:translate(-4px,2px)}85%{transform:translate(3px,-2px)}}
+.dmg{font:700 54px/1.2 var(--hand);color:var(--stamp);animation:dmgp .8s ease-out}@keyframes dmgp{0%{transform:scale(2.4);opacity:0}30%{transform:scale(1);opacity:1}}
+.dbr{position:absolute;top:-10vh;color:#7d7266;font-size:22px;animation:dbr 1s ease-in forwards}@keyframes dbr{to{transform:translateY(112vh) rotate(220deg)}}@keyframes shk{20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.toast.hit{border:2px solid var(--stamp);background:var(--stamp);color:#fff;font-weight:700}
+body.mt{--desk:#b89a76;--paper:#f0e2c8;--paper2:#e4d2b0;--ink:#3a2a1c;--mute:#7a6248;--leaf:#8a5a2b;--leaf-ink:#fbf2e0;--stamp:#a83f2d;--gold:#8f6a12;--line:#c9b08a;color-scheme:light}
+html:has(body.mt){background:#b89a76}
+body.cave{--desk:#050506;--paper:#101114;--paper2:#1a1c20;--ink:#e8e8ee;--mute:#9a9aa6;--leaf:#4f9cc0;--leaf-ink:#04121a;--stamp:#e48a74;--gold:#dcb85e;--line:#2a2c33;--c:#b4b4c0;--u:#8fd0a8;--r:#86b4f0;--e:#c9a0f0;--m:#f0b070;--x:#f08a80;color-scheme:dark}
+html:has(body.cave){background:#050506}
+body.night{--desk:#0a0f1f;--paper:#151c33;--paper2:#1d2644;--ink:#e3e9f7;--mute:#97a3c4;--leaf:#8fd0b8;--leaf-ink:#0e1a22;--stamp:#ee8f7a;--gold:#e3c46e;--line:#33406a;--c:#b4bfd8;--u:#8fd0a8;--r:#86b4f0;--e:#c9a0f0;--m:#f0b070;--x:#f08a80}
+html:has(body.night){background:#0a0f1f}
+.hud,main,.card{transition:background-color .7s,border-color .7s,color .7s}
+.nightbar{border-color:var(--gold)}
+.toast.night{background:#0e1530;color:#e3e9f7;border:2px solid #7f8fd0;font-weight:700}
+.ic{display:inline-block;width:1.5em;text-align:center;margin-right:2px;filter:saturate(.85)}
+.tile .tn .ic{font-size:18px;margin-right:4px}
+.stats span{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:0 8px}
+.bar i{height:9px}
+.bar b{background:linear-gradient(90deg,var(--leaf),#5a9a6c);transition:width .4s}.bar.x b{background:linear-gradient(90deg,var(--gold),#d6b04a)}.bar.low b{background:linear-gradient(90deg,var(--stamp),#d27a5a)}
+body{background-image:radial-gradient(circle at 15% 10%,#ffffff40,transparent 40%),radial-gradient(circle at 85% 90%,#0000000d,transparent 45%)}
+.card{border-left:3px solid var(--leaf);box-shadow:0 1px 0 #fff6 inset}
+.card h2::before{content:'❖ ';color:var(--leaf);font-size:.8em}
+body.mt .card{border-left-color:#8a5a2b}body.mt .card h2::before{color:#8a5a2b}
+.tile{transition:transform .12s,box-shadow .12s}.tile:hover:not(:disabled){transform:translateY(-2px);box-shadow:2px 4px 0 var(--line)}
+.btn{transition:transform .12s,box-shadow .12s,border-color .12s}.btn:hover:not(:disabled){transform:translateY(-1px)}
+.cld{animation:cld linear infinite}@keyframes cld{from{transform:translateX(-60px)}to{transform:translateX(340px)}}
+.bird{animation:brd 24s linear infinite}.bird.b2{animation-duration:33s;animation-delay:-14s}@keyframes brd{from{transform:translate(-20px,30px)}50%{transform:translate(150px,18px)}to{transform:translate(330px,34px)}}
+.ff{animation:ff ease-in-out infinite alternate}@keyframes ff{from{opacity:0;transform:translate(0,0)}to{opacity:1;transform:translate(8px,-9px)}}
+.dust{animation:dst linear infinite}@keyframes dst{from{transform:translate(0,-6px)}to{transform:translate(-40px,120px)}}
+.glow{animation:glw 3s ease-in-out infinite alternate}@keyframes glw{to{opacity:.08}}
+.scene.arr .cap b{animation:arr .7s ease-out}@keyframes arr{from{opacity:0;letter-spacing:.4em;transform:translateY(6px)}}
+.scene.arr svg{animation:arrz .9s ease-out}@keyframes arrz{from{filter:brightness(1.6) blur(2px)}}
+@media (prefers-reduced-motion:reduce){.cld,.bird,.ff,.dust,.glow,.scene.arr svg,.scene.arr .cap b{animation:none}}
+.twk{animation:twk 2.4s ease-in-out infinite alternate}@keyframes twk{to{opacity:.2}}
+@media (prefers-reduced-motion:reduce){.twk{animation:none}}
+.sec{font-size:12px;letter-spacing:.14em;color:var(--mute);margin:14px 0 6px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.tile{position:relative;font:inherit;text-align:left;background:var(--paper);color:var(--ink);border:1px solid var(--ink);border-radius:3px;padding:10px 12px;cursor:pointer;box-shadow:2px 2px 0 var(--line);display:flex;flex-direction:column;gap:2px;min-width:0;touch-action:manipulation}
+.tile:hover:not(:disabled){border-color:var(--leaf)}.tile:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tile:disabled{opacity:.5;border-style:dashed;box-shadow:none;cursor:not-allowed}
+.tile .tn{font-family:var(--display);font-weight:600;font-size:16px}.tile .ts{font-size:12px;color:var(--mute)}
+.tile.go{background:var(--leaf);color:var(--leaf-ink);border-color:var(--leaf)}.tile.go .ts{color:inherit;opacity:.85}
+.bdg{align-self:flex-start;font-size:11px;padding:0 8px;border-radius:9px;margin-top:4px;border:1px solid var(--leaf);color:var(--leaf);line-height:1.6}
+.bdg.warn{border-color:var(--stamp);color:var(--stamp)}.bdg.mute{border-color:var(--line);color:var(--mute)}
+.tile.go .bdg{border-color:currentColor;color:inherit}
+.lack,.red{color:var(--stamp)}.red{font-weight:700}
+.ta{display:block;width:100%;min-height:84px;font:12px/1.4 ui-monospace,Menlo,monospace;background:var(--paper);color:var(--ink);border:1px solid var(--ink);border-radius:3px;padding:6px;resize:vertical;word-break:break-all}
+.toast.warn{border:2px solid var(--stamp);color:var(--stamp)}
+.warp{position:absolute;inset:0;pointer-events:auto;background:#05060c;display:flex;align-items:center;justify-content:center;overflow:hidden;animation:wpio 1.7s linear forwards}
+@keyframes wpio{0%,70%{opacity:1}100%{opacity:0}}
+.warp .wv{position:absolute;width:150vmax;height:150vmax;background:conic-gradient(from 0deg,#0000,var(--c1),#0000 25%,var(--c2),#0000 50%,var(--c1),#0000 75%,var(--c2),#0000);opacity:.55;animation:wsp 1.7s cubic-bezier(.3,.6,.4,1) forwards}
+@keyframes wsp{from{transform:rotate(0) scale(.2)}to{transform:rotate(540deg) scale(1)}}
+.warp .wr{position:absolute;width:30vmin;height:30vmin;border-radius:50%;border:3px solid var(--c2);box-shadow:0 0 30px var(--c1),inset 0 0 30px var(--c1);animation:wrg 1.1s ease-out forwards}
+.warp .wr.r2{animation-delay:.25s}
+@keyframes wrg{from{transform:scale(.1);opacity:1}to{transform:scale(7);opacity:0}}
+.warp .wt{position:relative;text-align:center;color:var(--c2);opacity:0;animation:wtx 1.7s ease-out forwards;text-shadow:0 0 18px var(--c1)}
+.warp .wt b{display:block;font:400 clamp(54px,18vw,92px)/1.2 var(--hand);letter-spacing:.2em}.warp .wt small{display:block;font-size:14px;letter-spacing:.3em;opacity:.85}
+@keyframes wtx{0%{opacity:0;transform:scale(.7)}20%,75%{opacity:1;transform:scale(1)}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.warp .wv,.warp .wr{animation:none}}
+#fx{position:fixed;inset:0;z-index:18;pointer-events:none;overflow:hidden}#fx[hidden]{display:none!important}
+#fx .dim{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,#0000 0,#000c 90%);animation:dimio 5s ease-in-out forwards}#fx .dim.short{animation-duration:3.2s}
+@keyframes dimio{0%{opacity:0}12%{opacity:1}82%{opacity:1}100%{opacity:0}}
+#fx .mt{position:absolute;left:112%;width:260px;height:3px;border-radius:3px;background:linear-gradient(90deg,#fff0,#fff 85%);filter:drop-shadow(0 0 8px #bfe4ff);opacity:0;animation:fly 1.5s ease-in forwards}
+#fx .m1{top:8vh}#fx .m2{top:28vh;width:170px;animation-delay:.25s}#fx .m3{top:2vh;width:120px;animation-delay:.7s}
+#fx .mt::after{content:"";position:absolute;right:-4px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#fff;box-shadow:0 0 12px 6px #bfe4ff}
+#fx .big{top:14vh;width:420px;height:4px;animation-delay:.45s;animation-duration:1.9s;filter:drop-shadow(0 0 14px #9fd0ff)}
+@keyframes fly{0%{opacity:0;transform:translate(0,0) rotate(148deg)}10%{opacity:1}90%{opacity:1}100%{opacity:0;transform:translate(-150vw,93vw) rotate(148deg)}}
+#fx .boom{position:absolute;left:30%;top:70%;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 0 60px 40px #bfe4ff;opacity:0;animation:boom 1.5s 2.1s ease-out forwards}
+@keyframes boom{0%{opacity:0;transform:scale(.2)}20%{opacity:1}100%{opacity:0;transform:scale(7)}}
+#fx .mtxt{position:absolute;left:0;right:0;top:36%;text-align:center;color:#fff;text-shadow:0 0 16px #7fb8ff;opacity:0;animation:mtx 3.6s 1.4s forwards;padding:0 16px}
+#fx .mtxt.gain{top:40%;animation-delay:.2s;animation-duration:2.8s;text-shadow:0 0 16px #ffd36a}
+#fx .mtxt b{display:block;font:400 42px/1.3 var(--hand);letter-spacing:.3em;padding-left:.3em}#fx .mtxt span{font-size:14px;letter-spacing:.1em}#fx .mtxt em{display:block;margin-top:10px;color:#ff6b5e;font-style:normal;font-weight:700;font-size:17px;letter-spacing:.12em;text-shadow:0 0 10px #000}
+@keyframes mtx{0%{opacity:0;transform:translateY(12px)}20%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+#fx .sp{position:absolute;left:50%;top:46%;width:8px;height:8px;margin:-4px;background:#ffe08a;border-radius:50%;box-shadow:0 0 10px 3px #ffd36a;animation:spark 1.6s ease-out forwards}
+@keyframes spark{from{opacity:1;transform:rotate(var(--a)) translateX(0) scale(1.2)}to{opacity:0;transform:rotate(var(--a)) translateX(36vmin) scale(.2)}}
+.starbtn{border-color:var(--gold);color:var(--gold);font-weight:700;animation:glow 1.6s ease-in-out infinite alternate}
+@keyframes glow{from{box-shadow:0 0 0 0 #e3c46e55}to{box-shadow:0 0 14px 3px #e3c46eaa}}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pls 1.6s ease-out infinite}@keyframes pls{from{opacity:1;transform:scale(.6)}to{opacity:0;transform:scale(2.4)}}
+@media (prefers-reduced-motion:reduce){.starbtn,.pulse{animation:none}}
+#fx .ghostdim{background:radial-gradient(circle at 50% 45%,#0000 0,#0a1a3acc 90%);animation-duration:5.4s}
+#fx .gh{position:absolute;left:-40%;top:52%;width:34vmin;height:34vmin;border-radius:50%;background:radial-gradient(circle,#e4f2ffcc 0,#9fc8ff66 40%,#0000 70%);filter:blur(4px);animation:ghmove 4.6s ease-in-out forwards}
+@keyframes ghmove{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translate(180vw,-12vh)}}
+#fx .gh2{animation-delay:.8s}#fx .mtxt em.calm{color:#bfe0ff;text-shadow:0 0 12px #2a4a9a}
+.ghostbar{border-color:#9fc8ff}
+.ghg{animation:ghdrift 16s linear infinite}@keyframes ghdrift{from{transform:translateX(-30px)}to{transform:translateX(335px)}}
+@media (prefers-reduced-motion:reduce){.ghg{animation:none;transform:translateX(150px)}}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+@media (prefers-reduced-motion:reduce){.toast,.btn{animation:none;transition:none}}
+@media (max-width:480px){.bars{grid-template-columns:1fr}.grid{grid-template-columns:1fr}main{padding:10px}}
+[hidden]{display:none!important}
+:root{color-scheme:light}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hud" id="hud"></div>
+<nav id="nav"></nav>
+<main id="main"></main>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<div id="over" hidden></div>
+<div id="cut" hidden></div>
+<div id="fx" hidden></div>
+<script>
+
+// [id,名稱,分類,稀有度/現象類別,EXP,售價,可攜帶,描述]
+const D=[
+['echo','回聲草','植物','常見',10,10,1,'整片草地都是。對聲音極敏感，會放大風聲與捕食者吼叫。可做營養品，是神木草質龍的主食。'],
+['yuxi','玉璽草','植物','常見',15,15,1,'生於樹蔭下的嫩芽，是日裳樹的幼苗。口感軟嫩，是『玉璽燒』的原料。'],
+['lily','破曉百合','植物','珍奇',120,500,1,'僅在破曉時分短暫開花。適合觀賞，微毒不可食用，可提煉麻醉藥。'],
+['sun','日裳樹','植物','常見',15,0,0,'萬象森林的主要林相，高大茂密，樹蔭庇護了玉璽草。無法放入背包。'],
+['c100','百年苜蓿','植物','稀少',50,1000,1,'生長於大草原，自然生長需百年。回復體力的良藥，也是迷迭兔幼體最愛的食物。'],
+['c10k','萬年苜蓿','植物','珍奇',150,4000,1,'生長超過萬年的變異苜蓿，植株巨大散發金光。可回復巨量體力，是神木草質龍的最愛。'],
+['frog','碧玉湖蛙','兩棲','常見',15,0,0,'灰色中型蛙類，棲息於湖岸泥沼。皮膚黏液具保濕保水功效（掉落物：湖蛙黏液）。'],
+['trout','碧玉艷陽鱒','魚類','稀少',50,200,1,'淡黃色鱗片的大鱒魚。早上出現，晚上看不到。肉質緊實適合做高級料理。'],
+['bream','緣氏淡水鯛','魚類','常見',15,60,1,'大前輩「緣貔」命名。生活於碧玉湖下游，數量最多，略帶土腥味。'],
+['weaver','草浪織布鳥','鳥類','常見',10,0,0,'體型嬌小成群出現，棲息於日裳樹，會採集回聲草築巢以提早警戒。只能觀察。'],
+['eagle','明武熊鷹','鳥類','稀少',40,350,1,'白天出現的巨大飛行捕食者，視力可達兩公里。與牧野禾斑貓是陸地競爭關係。'],
+['owl','萬象密林鴞','鳥類','稀少',45,300,1,'夜間中型鳥類，飛行完全無聲，是夜間最強飛行捕食者。羽毛可做高級飾品。'],
+['heron','碧玉盜賊鷺','鳥類','常見',25,0,0,'棲息於湖岸，捕食鱒魚與鯛。垂釣時有機率突襲搶魚。只能觀察。'],
+['rat','牧野長尾鼠','獸類','常見',10,35,1,'數量龐大。尾巴像回聲草，遇敵會豎尾裝成植物。肉質偏乾，適合野外燒烤。'],
+['rabbit','迷迭兔','獸類','常見',20,50,1,'聽覺靈敏，主食為百年苜蓿，排泄物帶迷迭香氣。跟蹤牠可以找到百年苜蓿。'],
+['cat','牧野禾斑貓','獸類','稀少',60,200,1,'善於隱藏，夜間遇見機率較高。擅長伏擊與長途追擊，獵人極看好的捕獵夥伴。'],
+['wolf','萬象森林狼','獸類','常見',30,100,1,'大型肉食獸，常在綠林道結群徘徊。皮毛可保暖，是新手的斷頭噩夢。'],
+['squirrel','緣氏珍珠鼯鼠','獸類','珍奇',180,530,1,'雪白鼯鼠，晝伏夜出。在樹林間靈活變向，逃脫率高達 70%，極為稀少。'],
+['wave','回聲草浪','現象','平平',10,0,0,'大風吹過成片回聲草如綠色浪花，會劇烈放大環境風聲。'],
+['leap','鱒魚躍龍門','現象','絕美',200,0,0,'早上釣起艷陽鱒的瞬間，反光鱗片猶如地表的第二個太陽。'],
+['smoke','狼煙四起','現象','驚駭',150,0,0,'成群的森林狼在綠林道踩踏出鋪天蓋地的煙塵，代表回家的路已被截斷。'],
+['quartz','牧野石英','礦物','常見',10,30,1,'生長於綠林道，耐磨石材，石英輕甲的核心材料。'],
+['lantern','南瓜燈籠石','礦物','瑰寶',250,700,1,'生長於萬象森林深處，入夜後發出淡藍光芒，可交給工匠加工成高級檯燈。'],
+['star','天外星體','礦物','神隱',800,10000,1,'天外墜落的隕星，全界域出現機率最低，隨機墜落各處。黑市天價。'],
+['dragon','神木草質龍','龍獸','常見',100,0,0,'體型如移動的小山。偷取龍蛋可帶回販售，但母龍一旦發現會瞬間暴怒。'],
+['lion','牧野草原獅亡魂','獸類/鬼怪','幻奇',1000,0,0,'百年前因氣候變遷滅絕的霸主，只有深夜草原上極低機率能見到蒼白幽光的虛影。只能遠觀，無法捕捉，偶爾會發出吼叫。'],
+['oxy','解氧石','礦物','常見',15,90,1,'生長於峽之間的土壤中，表面有微小孔洞，內部蘊含氧原子，經特殊處理可提取氧氣。','mt'],
+['osseo','屍骨簇','礦物','常見',20,120,1,'生長於動物遺骸上的純白色晶體，數萬年沉澱，已把骨骼成分取代成礦石。硬度尚可，可製成加固裝甲的外骨骼。','mt'],
+['obsid','地獄黑曜石','礦物','瑰寶',300,1200,1,'百萬年前火山噴發冷卻後的黑曜石，經岩層擠壓質變成黑紫色。鍛造的黑曜石刀削鐵如泥。','mt'],
+['iron','奧古斯精鐵礦','礦物','稀少',80,300,1,'由發現者奧古斯命名的純黑色礦石，強度適中，適合做攀爬鐵鉤。','mt'],
+['sapph','洞穴海藍水晶','礦物','瑰寶',350,2000,1,'生長於泉流洞深處富含礦物質的泉水中，接觸紫外線會綻放耀眼藍光。洞中有大鯢棲息，開採困難。','mt'],
+['jade','統天寶玉','礦物','幻奇',800,8500,1,'生長於玄脈山頂峰的傳說寶石，據說找到就能成就大業大富大貴。發現並命名者奧古斯就有一顆。','mt'],
+['drought','莽原旱魃草','植物','常見',10,20,1,'山界全境都有，柔韌、劇毒、氣味難聞，連殘渣都能再生，甚至長在旱災擬岩鱷的背上。以適應力聞名。','mt'],
+['maoc','木茅','植物','常見',10,30,1,'生長於嶽嵒峭，是君主大角羊的主食。根莖粗壯抓地，葉子口感粗硬，可編製成繩索。','mt'],
+['juniper','頂點圓柏','植物','瑰寶',200,1200,1,'生長於玄脈山頂峰，數百年才長一顆毬果。種子被絲綢鳥叼走傳播，是極好的園藝植物，但採集環境惡劣。','mt'],
+['goat','君主大角羊','獸類','常見',20,200,1,'獨居的中型獸類，頭骨厚度是人界大角羊的兩倍，領地意識強，嗅覺聽覺發達。（售價指掉落物羊角）','mt'],
+['dagger','匕首山貓','獸類','稀少',60,420,1,'生活於嶽嵒峭，尾部特化為近 40 公分的骨刃，可切割、揮擊、勾岩壁。擅長伏擊，體力不支時會被獵物君主大角羊反殺。','mt'],
+['bat','巨型走地伏翼','獸類','稀少',70,500,1,'生活於泉流洞，前肢粗壯、視覺退化，靠巨大耳朵和嗅覺掌握四周動靜。對探險者來說非常難對付。','mt'],
+['vulture','深淵食骨鷲','鳥類','稀少',60,200,1,'盤旋於峽之間上空的巨鳥，主食為動物骨骼。一旦發現下方生物體力不支就會俯衝攻擊，但俯衝失敗會陷入劣勢。','mt'],
+['swallow','腐臭高山燕','鳥類','常見',10,50,1,'棲息於嶽嵒峭的小型鳥類，對旱魃草毒素免疫，以其築巢。無法捕捉，只能採集牠們的排泄物，可製成除雜草的農藥。（售價指排泄物）','mt'],
+['falcon','兇猛鋼刀隼','鳥類','稀少',40,200,1,'巢穴築於絕壁之上，翼前緣藏有鋒利骨刃，俯衝時化為切割獵物的利刃。連劇毒的峭壁鉤鱗蝮也能消化，是腐臭高山燕的天敵。','mt'],
+['silk','玄脈山絲綢鳥','鳥類','珍奇',200,600,1,'生活於玄脈山頂峰，雄鳥擁有如絲綢般的長尾羽，求偶時在高原奔跑跳躍如同舞者。（雄 600、雌 530 界幣）','mt'],
+['locust','遠行青蝗','節肢','常見',10,50,1,'以旱魃草為食、自身帶毒的昆蟲，靠強大的飛行力躲避天敵腐臭高山燕。4～5 隻結伴遷徙。——奧古斯','mt'],
+['centi','琳琅百足','節肢','稀少',20,500,1,'泉流洞的大型節肢動物，體節上的結晶因螢光細菌而發光。毒牙的毒素像是專門針對巨型走地伏翼設計的。——奧古斯','mt'],
+['nail','阿貝拉多釘蟲','節肢','常見',10,10,1,'生活於玄脈山頂峰的灰黑色小蟲，吸食頂點圓柏汁液，刮大風時用腹部尖刺穩住身形。天敵是玄脈山絲綢鳥。','mt'],
+['croc','旱災擬岩鱷','爬蟲','稀少',60,1200,1,'潛伏於峽之間泥潭的大型爬蟲，皮膚粗糙如岩石，背上長著旱魃草。被牠埋伏基本上九死一生，下雨天會變得更活躍。（售價指掉落物擬岩鱷皮）','mt'],
+['skink','地脈石龍子','爬蟲','稀少',30,200,1,'生活於嶽嵒峭的小型爬蟲，擅長遁地，能感受大地的震動。是匕首山貓的食物之一，流線型鱗片讓牠極易逃脫。','mt'],
+['gecko','泰坦錘尾蠍虎','爬蟲','瑰寶',200,3000,1,'泉流洞的大型爬蟲，以琳琅百足為主食，與巨型走地伏翼互為競爭者。尾巴特化如錘子，數量稀少。','mt'],
+['ecroc','鱷口逃生','現象','驚駭',200,0,0,'躲過埋藏於泥潭中的旱災擬岩鱷攻擊，驚險逃生。','mt'],
+['erock','落井下石','現象','驚駭',150,0,0,'在大怒坡常有落石以極快的速度滾落，不小心被砸中的話半死不活。','mt'],
+['efog','迷霧繚繞','現象','驚駭',130,0,0,'在嶽嵒峭與頂峰的交界處，大霧四起看不清方向，一不小心就會跌落山崖。','mt'],
+['ewind','狂風呼嘯','現象','平平',50,0,0,'玄脈山頂峰經常伴隨強烈狂風，看似平平無奇，但不及時躲避會被直接吹走。','mt'],
+['equake','地牛翻身','現象','驚駭',200,0,0,'大地震顫，天搖地動，大怒坡的落石變得更多，似乎也喚醒了沉睡中的巨獸。','mt'],
+['erain','久違的甘露','現象','驚駭',300,0,0,'地面受熱後形成對流雲降雨。下雨天寸步難行，環境會變得更加危險。','mt'],
+['sal','泉流洞大鯢','兩棲','神隱',810,5000,1,'棲息於泉流洞深潭，體長最大可達 15 公尺，新陳代謝極其緩慢，絕大多數時間都在沉睡。分泌的精煉黏液可做成植物營養液。（售價指大鯢黏液）','mt']
+];
+const DM={};D.forEach(d=>DM[d[0]]={id:d[0],n:d[1],cat:d[2],r:d[3],exp:d[4],p:d[5],carry:d[6],desc:d[7]});
+const RC={常見:'c',稀少:'u',珍奇:'r',瑰寶:'e',幻奇:'m',神隱:'x',平平:'c',怡人:'u',驚駭:'x',絕美:'m'};
+const I={};
+D.forEach(d=>{if(d[6])I[d[0]]={n:d[1],p:d[5],cat:d[2],r:d[3]}});
+Object.assign(I,{
+slime:{n:'湖蛙黏液',p:50,cat:'素材',r:'常見'},
+egg:{n:'神木草質龍蛋',p:300,cat:'素材',r:'珍奇'},
+lamp:{n:'高級檯燈',p:1400,cat:'成品',r:'瑰寶'},
+ration:{n:'基礎乾糧',p:0,cat:'消耗',r:'常見',eat:15},
+yuxiyaki:{n:'玉璽燒',p:0,cat:'消耗',r:'稀少',eat:50,buff:1},
+bait:{n:'野獸誘餌',p:0,cat:'消耗',r:'常見'},
+stone:{n:'界石',p:0,cat:'消耗',r:'常見'},
+fert:{n:'肥料',p:0,cat:'消耗',r:'常見'}});
+I.c100.eat=40;I.c10k.eat=100;
+I.bones={n:'牧野草原獅遺骸',p:0,cat:'素材',r:'幻奇'};
+I.platter={n:'牧野風味魚肉拼盤',p:0,cat:'消耗',r:'珍奇',eat:60};
+I.roast={n:'牧野烤鼠',p:0,cat:'消耗',r:'常見',eat:30};
+I.dung={n:'迷迭兔排泄物',p:0,cat:'素材',r:'常見'};I.spice={n:'迷迭香味料',p:0,cat:'消耗',r:'稀少',spice:1};
+const sellerOf=id=>['植物','魚類'].includes(I[id].cat)?'hua':'jabs';
+const LV=[0,100,350,900,1800];
+const FARM={echo:[20,100],yuxi:[25,100],lily:[90,85],c100:[120,90],c10k:[240,60]};
+const MS=[
+{id:'m1',n:'植物學家',d:'登錄全部 6 種植物',cats:['植物'],coin:300},
+{id:'m2',n:'水岸見聞',d:'登錄全部魚類與兩棲類',cats:['魚類','兩棲'],coin:300},
+{id:'m3',n:'賞鳥人',d:'登錄全部 4 種鳥類',cats:['鳥類'],coin:300},
+{id:'m4',n:'獵人之眼',d:'登錄牧野全部 5 種獸類',cats:['獸類'],coin:500},
+{id:'m5',n:'礦脈與巨龍',d:'登錄全部礦物與龍獸',cats:['礦物','龍獸'],coin:800},
+{id:'m6',n:'現象收藏家',d:'登錄全部 3 種現象',cats:['現象'],coin:500},
+{id:'m7',n:'最後的亡魂',d:'登錄隱藏的草原獅亡魂',ids:['lion'],coin:1000}];
+const MPOOL=[['oxy',4,150],['osseo',3,160],['maoc',4,150],['drought',5,100],['locust',3,140],['swallow',3,150],['goat',1,320],['skink',1,300],['dagger',1,620],['croc',1,1300],['centi',1,720]];
+const POOL=[['echo',5,90],['yuxi',3,70],['quartz',4,110],['bream',2,150],['rat',2,120],['wolf',1,220],['c100',1,1300],['trout',1,300],['cat',1,320],['rabbit',2,160]];
+const SAVE='daqian_v1',VER='1.7.1（11/19 絲綢鳥分雌雄）';let S,tab='act',dexF='全部';
+const fresh=()=>({coins:100,energy:100,exp:0,inv:{},stash:{},box:{},dex:{},gear:{},loc:'home',view:'town',place:'gate',t:360,buff:0,farm:Array(10).fill(null),ms:{},shen:false,lionOpen:false,boxOn:false,pointer:false,eggDone:false,owned:{},realm:'mu',poison:0,hyp:0,hypC:0,rain:0,quake:0,frac:0,mtSeen:0,intro:0,aji:0,ajiI:0,jail:0,pend:null,bday:'',bdone:{},relief:'',logs:['你是一名探索者。公告欄的阿吉似乎有話想對新人說。']});
+function load(){try{const x=localStorage.getItem(SAVE);if(x){const o=JSON.parse(x);S=Object.assign(fresh(),o);if(o.intro===undefined){S.intro=1;S.aji=1}}else S=fresh()}catch(e){S=fresh()}}
+let LSOK=true,lastSave=0;
+function save(){try{localStorage.setItem(SAVE,JSON.stringify(S));LSOK=true;lastSave=Date.now()}catch(e){LSOK=false}}
+const log=m=>{Q.push(m);S.logs.unshift(m);S.logs.length=Math.min(S.logs.length,40)};
+const lvl=()=>LV.filter(x=>S.exp>=x).length;
+const cap=()=>20+lvl()-1;
+const used=o=>Object.values(o).reduce((a,n)=>a+Math.ceil(n/10),0);
+const hr=()=>Math.floor(S.t/60)%24;
+const isDay=()=>(S.loc==='realm'&&S.realm==='mt')||(hr()>=6&&hr()<18);
+const isNight=()=>!isDay();
+const clock=()=>`第${Math.floor(S.t/1440)+1}日 ${String(hr()).padStart(2,'0')}:${String(S.t%60).padStart(2,'0')} ${isDay()?'☀ 白天':'☾ 夜晚'}`;
+const cnt=id=>(S.inv[id]||0)+(S.box[id]||0)+(S.loc==='home'?(S.stash[id]||0):0);
+function take(id,n=1){let k=n;for(const o of (S.loc==='home'?[S.inv,S.stash,S.box]:[S.inv,S.box])){const m=Math.min(o[id]||0,k);if(m){o[id]-=m;k-=m;if(!o[id])delete o[id]}}return k===0}
+function add(id,n=1){let ok=0;for(let i=0;i<n;i++){S.inv[id]=(S.inv[id]||0)+1;if(used(S.inv)>cap()){S.inv[id]--;if(!S.inv[id])delete S.inv[id];break}ok++}if(ok<n)log(`背包已滿，${I[id].n} 放不下，只帶走 ${ok}/${n}。`);return ok}
+function addHome(id,n=1){const k=add(id,n);if(k<n)S.stash[id]=(S.stash[id]||0)+(n-k)}
+const reg25=()=>DR('mu').filter(d=>d[0]!=='lion').every(d=>S.dex[d[0]]);
+function gainExp(n){const a=lvl();S.exp+=n;const b=lvl();if(b>a){log(`⭐ 等級提升 Lv.${b}！背包容量 ${cap()} 格。次元門發出強烈微光，星圖迷霧似乎在擴散。`)}}
+function unlock(id){if(S.dex[id])return false;S.dex[id]=1;const d=DM[id];gainExp(d.exp);log(`📖 圖鑑解鎖【${d.n}】 +${d.exp} EXP`);
+ if(id!=='lion'&&!S.shen&&!S.n25&&reg25()){S.n25=1;log('🏡 牧野界 25 種常規圖鑑全數登錄！快回人界，有人在等你。');notice('圖鑑達成！','牧野界 25 種常規圖鑑全數登錄。次元門劇烈地閃爍，人界方向傳來了呼喚。回到人界看看吧。')}
+ return true}
+const nightKey=()=>Math.floor((S.t-360)/1440);
+const ghostOn=()=>S.ghostNight===nightKey()&&isNight()&&S.loc==='realm';
+function ghostRoll(){if(S.loc!=='realm'||!isNight()||!S.boneGot)return;const k=nightKey();if(S.nightRolled===k)return;S.nightRolled=k;
+ if(Math.random()<.3){S.ghostNight=k;S.ghostFx=1;log('👻 亡魂徘徊！牧野草原獅的亡魂在牧野界各處遊蕩，今夜沒有任何掠食者敢靠近。')}}
+function adv(m){advBase(m);ghostRoll();mtAdv()}
+function advBase(m){const d0=isDay();S.t+=m;if(S.buff>0)S.buff--;if(S.spice>0)S.spice--;
+ if(S.loc==='realm'&&isDay()!==d0){if(isDay())log('🌅 天亮了。危險度回到「微弱」，夜行的掠食者退去。');else log(`🌙 夜幕降臨！危險度升至「侵蝕」，每次行動有 ${S.gear.bracelet?4:12}% 機率遭到掠食者襲擊。`)}}
+function die(msg){const lb=(S.inv.bones||0)>0&&!(S.box&&S.box.bones)&&!GO('bracelet');mtReset();S.fear=0;S.meteor=null;S.starWolf=0;S.inv={};S.energy=20;S.buff=0;S.loc='home';S.view='house';S.pend=null;
+ log(`💀 ${msg} 背包內的物品全數遺失（圖鑑進度與旅行箱保留）。你在探索者小屋醒來。`);
+ if(lb){S.boneGot=0;S.brFixed=1;log('🦴 你帶出來的牧野草原獅遺骸也遺失在途中，必須重新前往尋找。')}
+ if(S.coins<50&&!cnt('stone')){S.jail=Date.now()+60000;log('你身無分文，被抓去小黑屋關禁閉 60 秒（原設定 5 分鐘，為遊玩體驗縮短），出來可領 200 界幣。')}}
+function spend(c){S.hitMsg='';if(S.gear.exo&&c>0&&S.loc==='realm')c=Math.max(1,Math.ceil(c*.8));S.energy-=c;adv(30);if(S.fear>0){S.energy-=2;S.fear--;log('雙腿還在發軟，體力額外 -2。')}
+ if(S.frac&&S.loc==='realm'){if(S.numb>0){S.numb--;if(!S.numb)log('麻醉藥效退了，骨裂的劇痛又回來了。')}else{S.energy-=5;log('骨裂的劇痛讓你每動一下都很難受，體力額外 -5。')}}
+ if(S.energy>0&&isNight()&&S.loc==='realm'&&!ghostOn()&&Math.random()<(S.gear.bracelet?.04:.12)){const d=S.gear.armor?6:8,w=(AT[S.place]||['掠食者'])[Math.floor(Math.random()*(AT[S.place]||['x']).length)];S.energy-=d;S.hitMsg=`夜裡【${w}】襲擊了你，體力 -${d}。`;log(`⚔ 夜色中，【${w}】突然撲向你！體力 -${d}${S.gear.armor?'（石英輕甲擋下了一部分）':''}`)}
+ if(S.poison>0&&S.loc==='realm'){S.energy-=3;S.poison--;log(S.poison>0?`☠ 毒素發作，體力額外 -3（還剩 ${S.poison} 次）。`:'☠ 毒素發作，體力額外 -3。毒素終於退去了。')}
+ mtTick();
+ if(S.energy<=0){const m=S.dieMsg||'體力歸零。';S.dieMsg='';die(m);return false}
+ return true}
+const ch=p=>Math.random()<Math.min(.95,p);
+const bladeB=()=>S.gear.obblade?.25:S.gear.blade?.15:0,bladeS=()=>S.gear.obblade?.15:S.gear.blade?.1:0;
+const hp=p=>(p+bladeB())*(S.poison>0?.4:1);
+function goHome(m){mtReset();S.meteor=null;S.starWolf=0;S.loc='home';S.view='town';S.pend=null;if(m)log(m);}
+const mv=()=>Math.ceil(5*(S.place==='grass'&&S.realm!=='mt'?1.1:1)*(S.buff>0?.9:1)*(S.realm==='mt'&&S.rain>0?1.2:1));
+const AREAS={gate:'綠林道',grass:'牧野大草原',lake:'碧玉湖',forest:'萬象森林',gorge:'峽之間',slope:'大怒坡',cliff:'嶽嵒峭',cave:'泉流洞',peak:'玄脈山頂峰'};
+function go(p){if(spend(mv())){S.place=p;log(`你前往${AREAS[p]}。`);if(isNight()&&!S.meteor){const pc=.008+(S.starPity||0);if(Math.random()>=pc)S.starPity=Math.min(.05,(S.starPity||0)+.0002);else{S.meteor=p;S.flash=1;S.starPity=0;S.starWolf=!ghostOn()&&Math.random()<.6;if(S.starWolf){unlock('smoke');unlock('wolf');log('🐺 光芒吸引了森林狼的注意！')}log('✨ 一道流星劃過夜空，墜落在這一帶！四處找找看吧。')}}}R()}
+function leave(){if(!spend(3)){R();return}
+ if(!ghostOn()&&Math.random()<.35){unlock('smoke');unlock('wolf');S.pend='siege';log('🐺 狼群圍住了傳送門！')}else goHome('傳送門順利啟動，你回到人界。');R()}
+function bait(){if(take('bait')){goHome('你拋出野獸誘餌，狼群爭搶之際你衝進傳送門。')}R()}
+function breakout(){if(!spend(25)){R();return}
+ if(ch(.6+(S.gear.armor?.2:0)+bladeS()))goHome('你硬闖狼群，負傷衝進了傳送門。');else die('你在傳送門前被狼群撕碎，物資爆落滿地。');R()}
+function hunt(id,p,c,extra){if(!spend(c)){R();return}
+ if(id==='squirrel'&&S.gear.crown)p+=.17;
+ if(ch(hp(p))){unlock(id);add(id);log(`捕獲【${DM[id].n}】！`);extra&&extra()}else{const d=S.gear.armor?8:12;S.energy-=d;log(`狩獵失敗，反被追擊，體力 -${d}。`);if(S.energy<=0)die('狩獵失敗被反殺。')}R()}
+function obs(id,p,c,t){if(!spend(c)){R();return}
+ if(ch(p)){const n=unlock(id);log(n?t:`你再次看見了${DM[id].n}。`)}else log('四周靜悄悄，什麼也沒發現。');R()}
+function gather(id,c,p=1,extra){if(!spend(c)){R();return}
+ if(ch(p)){unlock(id);add(id);log(`採集到【${I[id].n}】。`);extra&&extra()}else log('一無所獲。');R()}
+let tug=null,tugT=null,tugD=null,tugRes=null;
+function fish(){if(!spend(7)){R();return}
+ const m=hr()>=6&&hr()<11,r=Math.random();let g=null;
+ if(m&&r<.3)g='trout';else if(r<(m?.65:.45))g='bream';
+ if(!g){if(Math.random()<.1){unlock('heron');log('盜賊鷺在湖面盤旋。')}else log('魚竿空空如也。');return R()}
+ if(Math.random()<.3){unlock('heron');tug={g,n:0,need:g==='trout'?12:9,t0:Date.now()};S.pend='tug';log('🦅 魚上鉤的瞬間，盜賊鷺俯衝而下，一口咬住了魚！快拉！');
+  tugD=setInterval(()=>{if(tug){tug.n=Math.max(0,tug.n-.45);upTug()}},300);
+  tugT=setTimeout(()=>endTug(false),5000);return R()}
+ unlock(g);add(g);log(`釣到【${I[g].n}】！`);if(g==='trout')unlock('leap');R()}
+function upTug(){const e=$('#tbar');if(e&&tug)e.style.width=Math.min(100,tug.n/tug.need*100)+'%'}
+function pull(){if(!tug)return;tug.n++;upTug();if(tug.n>=tug.need)endTug(true)}
+function endTug(win){if(!tug)return;const g=tug.g;tug=null;clearInterval(tugD);clearTimeout(tugT);unlock(g);
+ if(g==='trout')unlock('leap');
+ if(win){add(g);log(`釣到【${I[g].n}】！你把魚從盜賊鷺嘴裡搶了回來。`)}else log('魚被盜賊鷺叼走了……');
+ tugRes={win,g,t:Date.now()};S.pend='tugend';setTimeout(()=>{if(S.pend==='tugend')R()},1250);R()}
+function dragon(){if(!spend(10)){R();return}if(ch(.25)){unlock('dragon');S.pend='dragon';log('🦕 你找到了神木草質龍的巢穴，巨龍正在巢邊。')}else log('只找到一些巨大的腳印。');R()}
+function stealEgg(){if(!spend(10)){R();return}
+ if(ch(.55+(S.gear.armor?.1:0))){add('egg');log('🥚 你成功偷到一顆龍蛋，悄悄退走。');if(!S.eggDone){S.eggDone=true;gainExp(300);log('成功帶出龍蛋，額外 +300 EXP。（孵化坐騎將於 2.0 開放）')}S.pend=null}
+ else{const d=S.gear.armor?56:70;S.energy-=d;S.pend=null;if(S.energy<=0)die('偷蛋被母龍發現，你被暴怒的巨龍秒殺。');else log(`被母龍發現！你狼狽逃出，體力 -${d}。`)}R()}
+function lionHunt(){if(!spend(8)){R();return}
+ if(ch(.07)){S.lionSeen=(S.lionSeen||0)+1;
+  if(unlock('lion'))log('👻 草原深處浮現蒼白的幽光，一頭半透明的獅影靜靜望著你。牠只能遠遠觀看，無法捕捉。回人界找緣貔吧。');
+  else log(`👻 蒼白的獅影再次浮現（第 ${S.lionSeen} 次遇見）。牠只能遠觀，無法捕捉。`);
+  if(Math.random()<.3){S.fear=4;log('👻 獅亡魂仰頭發出震懾靈魂的吼叫！你雙腿發軟，接下來 4 次行動每次體力多消耗 2。')}
+  if(S.lionSeen>10&&!S.boneGot&&Math.random()<.2)lead()}
+ else log('夜風吹過，什麼也沒有。');R()}
+function lead(){log('👻 獅影緩緩轉身，示意你跟上。你跟著幽光穿過草原，來到萬象森林深處……');S.place='forest';
+ if(add('bones')){S.boneGot=1;log('👻 在發光的南瓜燈籠石之間，靜靜躺著一具巨大的獅子遺骸。你小心帶走了【牧野草原獅遺骸】，獅影在風中散去。')}else log('背包已滿，放不下遺骸。獅影仍在原地等你，清出空間後再來吧。')}
+function eat(id){const x=I[id];if(!x||!(x.eat||x.spice||x.cure||x.o2||x.anti||x.anes)||!cnt(id))return;
+ if(x.anti){if(!(S.poison>0)){log('你沒有中毒，不需要解毒藥。');return R()}take(id);S.poison=0;log('你服下解毒藥，毒素褪去，視線也恢復了清明。');return R()}
+ if(x.anes){if(!S.frac){log('你沒有骨裂，不需要麻醉藥。');return R()}if(S.numb>0){log('麻醉藥效還在，不必再用。');return R()}take(id);S.numb=10;log('你注射了麻醉藥，接下來 10 次行動內感覺不到骨裂的疼痛（骨頭仍未痊癒）。');return R()}
+ if(x.cure){if(!S.frac){log('你沒有骨裂，不需要治療包。');return R()}take(id);S.frac=0;log('你用治療包固定好了傷處，骨裂痊癒了。');return R()}
+ if(x.o2){if(!S.hyp){log('你的體力上限完好，不需要氧氣瓶。');return R()}take(id);S.hyp=0;log('你深吸一口氧氣瓶裡的氣體，被扣除的體力上限完全恢復了。');return R()}
+ if(x.spice){take(id);S.spice=10;log('你撒上迷迭香味料，接下來 10 次行動內，吃下的食物體力恢復 +5。');return R()}
+ if(S.energy>=maxE()){log('體力已滿。');return R()}
+ const bn=S.spice>0?5:0,tot=x.eat+bn;take(id);S.energy=Math.min(maxE(),S.energy+tot);
+ const bt=bn?`（含迷迭香加成 +${bn}）`:'';
+ if(x.buff){S.buff=10;log(`吃下${x.n}，體力 +${tot}${bt}，接下來 10 次行動移動消耗 -10%。`)}else log(`使用${x.n}，體力 +${tot}${bt}。`);R()}
+function tail(){if(!spend(8)){R();return}
+ const c=ch(hp(.4)),f=Math.random()<.3;let any=false;
+ if(c){unlock('rabbit');add('rabbit');log('你悄悄逼近，抓到了【迷迭兔】！');any=true}
+ if(f){unlock('rabbit');unlock('c100');add('c100');log('順著兔子的足跡，你找到了一株【百年苜蓿】！');any=true}
+ else if(Math.random()<.5){const n=1+(Math.random()<.4?1:0);add('dung',n);log(`你在兔子的巢邊撿到 ${n} 份迷迭兔排泄物，散發著迷迭香氣。`);any=true}
+ if(!any)log('兔子警覺地逃走了，什麼也沒留下。');R()}
+function realmActs(){if(S.realm==='mt')return mtActs();const p=S.place,day=isDay(),nt=isNight(),h=hr(),a=[];
+ const B=(t,s,f,dis)=>a.push({t,s,f,dis});
+ if(p==='gate'){
+  B('採集牧野石英','體力 -6',()=>gather('quartz',6));
+  B('狩獵森林狼','體力 -15・成功率約 40%',()=>hunt('wolf',.4,15));
+  B('啟動傳送門返回人界','35% 觸發狼群圍堵',leave)}
+ if(p==='grass'){
+  B('採集回聲草','體力 -6',()=>gather('echo',6,1,()=>{if(Math.random()<.25)unlock('wave')}));
+  B('搜尋百年苜蓿','體力 -8・稀少',()=>gather('c100',8,.18,()=>{}));
+  B('尋找萬年苜蓿','體力 -10・極稀少',()=>gather('c10k',10,.02));
+  B('採摘破曉百合','體力 -8・僅 05:00–07:00',()=>gather('lily',8,.4),!(h>=5&&h<7));
+  B('跟蹤迷迭兔','體力 -8・可能抓到兔子、找到百年苜蓿，沒找到苜蓿時可能撿到排泄物',tail);
+  B('捕捉長尾鼠','體力 -7',()=>hunt('rat',.55,7));
+  B('狩獵禾斑貓','體力 -12・夜晚較易',()=>hunt('cat',nt?.45:.3,12));
+  B('觀察織布鳥群','體力 -5',()=>obs('weaver',.55,5,'成群的織布鳥從日裳樹上飛起。'));
+  B('狩獵明武熊鷹','體力 -12・僅白天',()=>hunt('eagle',.28,12),!day);
+  B('狩獵萬象密林鴞','體力 -12・僅夜晚',()=>hunt('owl',.28,12),!nt);
+  B('尋找神木草質龍巢穴','體力 -10',dragon);
+  if(S.lionOpen)B('深夜靜候幽光',`體力 -8・僅夜晚・機率 7%・已遇見 ${S.lionSeen||0} 次`,lionHunt,!nt)}
+ if(p==='lake'){
+  B('垂釣','體力 -7・需釣竿・早上才有艷陽鱒',fish,!S.gear.rod);
+  B('捕捉碧玉湖蛙','體力 -6',()=>{if(!spend(6))return R();if(ch(.6)){unlock('frog');add('slime');log('抓到湖蛙，取得湖蛙黏液。')}else log('湖蛙跳進泥沼不見了。');R()});
+  B('觀察水鳥','體力 -5',()=>obs('heron',.4,5,'一隻盜賊鷺盯著湖面。'))}
+ if(p==='forest'){
+  B('採集玉璽草','體力 -6',()=>gather('yuxi',6));
+  B('觀察日裳樹','體力 -3',()=>obs('sun',1,3,'你抬頭望向遮天蔽日的日裳樹。'));
+  B('深入尋找南瓜燈籠石','體力 -10・夜晚較易',()=>gather('lantern',10,nt?.25:.1));
+  B('追蹤緣氏珍珠鼯鼠','體力 -10・僅夜晚',()=>hunt('squirrel',.18,10),!nt);
+  B('狩獵森林狼','體力 -15',()=>hunt('wolf',.4,15))}
+ if(S.meteor===p)a.unshift({t:'採集天外星體',s:'體力 -10・墜落的隕星，尚未被人發現',f:()=>{if(S.starWolf){S.pend='starwolf';return R()}collectStar(10)}});
+ return a}
+const ICN=[[/捕獵|狩獵|追蹤|獵/,'🏹'],[/採集|採/,'🌿'],[/觀察|探查|查看/,'🔍'],[/垂釣|釣/,'🎣'],[/睡|休息/,'🛏'],[/回|返回|離開/,'🏠'],[/前往|移動|走|攀|爬|進入|下山|上山/,'🧭'],[/傳送|共鳴/,'🌀'],[/購買|買/,'🛒'],[/賣/,'💰'],[/製作|打造/,'🔨'],[/裝備/,'🛡'],[/吃|料理|食/,'🍲'],[/治療|包紮/,'🩹'],[/存|讀取/,'💾']];
+const icon=t=>{if(/^[^\u0000-\u2000]/.test(t)&&/[\u2190-\u2BFF\u{1F000}-\u{1FFFF}]/u.test(t.slice(0,2)))return '';for(const r of ICN)if(r[0].test(t))return r[1];return '·'};
+const B=(t,f,o={})=>`<button class="btn ${o.c||''}" ${o.d?'disabled':''} onclick="${f}"><span class="ic">${icon(t)}</span>${t}${o.s?`<small>${o.s}</small>`:''}</button>`;
+const rn=id=>`<span class="r-${RC[I[id].r]}">${I[id].n}</span>`;
+function pay(c){if(S.coins<c){log('界幣不足。');R();return false}S.coins-=c;return true}
+function buy(id,c){if(!pay(c))return;if(add(id)){log(`購買了${I[id].n}（-${c}）。`)}else S.coins+=c;R()}
+function sell(id,n,mult=1){const k=Math.min(n,(S.inv[id]||0)+(S.stash[id]||0));if(!k)return;take(id,k);const g=Math.round(I[id].p*k*mult);S.coins+=g;log(`賣出 ${I[id].n}×${k}，獲得 ${g} 界幣。`);R()}
+function sellList(shop,mult=1,pred){const ids=Object.keys(Object.assign({},S.inv,S.stash)).filter(id=>I[id].p>0&&(pred?pred(id):sellerOf(id)===shop));
+ if(!ids.length)return '<p class="sub">身上沒有這位收購的物品。</p>';
+ return '<div class="list">'+ids.map(id=>`<div class="item"><span>${rn(id)} ×${(S.inv[id]||0)+(S.stash[id]||0)} <span class="mute">單價 ${Math.round(I[id].p*mult)}</span></span><span class="acts">${B('賣 1',`sell('${id}',1,${mult})`)}${B('全賣',`sell('${id}',999,${mult})`)}</span></div>`).join('')+'</div>'}
+function craft(out,need,coin,name){for(const k in need)if(cnt(k)<need[k]){log('材料不足。');return R()}
+ if(!pay(coin))return;for(const k in need)take(k,need[k]);
+ if(out==='armor'||out==='blade'||out==='bracelet'||out==='crown'||out==='hook'||out==='exo'||out==='obblade'){gearGet(out,name)}else{const b4=S.stash[out]||0;addHome(out);log(`製作完成：${name}${(S.stash[out]||0)>b4?'（背包已滿，放進了儲物櫃，到探索者小屋或背包頁可看到）':''}。`)}R()}
+const needTxt=n=>Object.keys(n).map(k=>`${I[k].n}×${n[k]}（有 ${cnt(k)}）`).join('、');
+function view(){
+ if(S.jail>Date.now())return `<div class="card alert"><h2>小黑屋</h2><p>你身無分文又在異界出事，被關起來了。還要 ${Math.ceil((S.jail-Date.now())/1000)} 秒，出來可領 200 界幣。</p></div>`;
+ if(S.jail){S.jail=0;S.coins+=200;log('你被放出小黑屋，領到 200 界幣。')}
+ if(S.loc==='realm')return scene(S.place)+(S.hitMsg?`<div class="card alert"><b>⚔ ${S.hitMsg}</b></div>`:'')+wolfWarn()+nightBar()+mtBar()+realmView();
+ const v=S.view;
+ if(v==='town')return scene('home')+town();
+ const back=B('← 回人界街道',"S.view='town';R()");
+ return back+({shop,forge,diner,station,shen,museum,house,board})[v]()}
+const canMake=(need,coin)=>S.coins>=coin&&Object.keys(need).every(k=>cnt(k)>=need[k]);
+const matTxt=(need,coin)=>Object.keys(need).map(k=>`<span class="${cnt(k)<need[k]?'lack':''}">${I[k].n}×${need[k]}（有 ${cnt(k)}）</span>`).join('、')+(coin?`${Object.keys(need).length?' ＋ ':''}<span class="${S.coins<coin?'lack':''}">${coin} 界幣</span>`:'');
+const rowB=(t,sub,f,o={})=>`<div class="item"><span><b>${t}</b>${o.tag?`<span class="tag">${o.tag}</span>`:''}<br><span class="mute">${sub}</span></span><span class="acts">${B(o.label||'購買',f,{c:o.c,d:o.d})}</span></div>`;
+const recipe=(t,out,need,coin,eff,tag)=>rowB(t,`${matTxt(need,coin)}<br>${eff}`,`craft('${out}',${JSON.stringify(need).replace(/"/g,"'")},${coin},'${t}')`,{label:'製作',d:!canMake(need,coin),tag});
+const buyRow=(t,id,c,eff)=>rowB(t,`<span class="${S.coins<c?'lack':''}">${c} 界幣</span>・${eff}・持有 ${cnt(id)}`,`buy('${id}',${c})`,{d:S.coins<c});
+const RF={armor:{quartz:4,wolf:1},blade:{quartz:2,rat:1,wolf:1},lamp:{lantern:1},bracelet:{bones:1,quartz:2},crown:{owl:3}};
+const showCr=()=>!!(S.dex.owl||cnt('owl')||GO('crown'));
+const RD={roast:{rat:1},platter:{bream:1,trout:1},yuxiyaki:{yuxi:3},spice:{dung:2}};
+const showBr=()=>!!(S.boneGot||cnt('bones')||GO('bracelet'));
+function badges(){const o={};
+ o.shop=cnt('stone')?['持有界石 '+cnt('stone'),'mute']:null;
+ const fg=(!GO('armor')&&canMake(RF.armor,0))||(!GO('blade')&&canMake(RF.blade,0))||canMake(RF.lamp,100)||(showBr()&&!GO('bracelet')&&canMake(RF.bracelet,100))||(showOb()&&!GO('obblade')&&canMake(RF.obblade,500))||(showExo()&&!GO('exo')&&canMake(RF.exo,3000))||(showCr()&&!GO('crown')&&canMake(RF.crown,100));
+ o.forge=fg?['可製作','ok']:null;
+ o.diner=(canMake(RD.roast,0)||canMake(RD.platter,0)||canMake(RD.yuxiyaki,10)||canMake(RD.spice,10))?['可烹飪','ok']:null;
+ o.station=cnt('stone')?['界石 '+cnt('stone'),'ok']:['沒有界石','warn'];
+ const rd=S.farm.filter(p=>p&&Date.now()>=p.end).length;
+ o.shen=!S.shen?['未開放','mute']:rd?['可收成 '+rd,'ok']:null;
+ const mc=MS.filter(m=>msDone(m)&&!S.ms[m.id]).length,f=pondInfo(),pr=f&&Date.now()-pond().t0>=f.t*60000;
+ o.museum=(mc||pr)?[[mc?`里程碑可領取 ${mc}`:'',pr?'芸生園可領取':''].filter(Boolean).join('・'),'ok']:null;
+ o.house=S.energy<50?['體力偏低，睡一覺吧','warn']:Object.keys(S.stash).length?['儲物櫃有東西','mute']:null;
+ const bn=bounties().filter((b,i)=>!S.bdone[i]&&cnt(b[0])>=b[1]).length;
+ o.board=bn?['可繳交 '+bn,'ok']:null;return o}
+let lastSig='';
+const TI={shop:'🏪',forge:'⚒',diner:'🍜',station:'🌀',museum:'🏛',shen:'⛩',house:'🏡',board:'📜'};
+function town(){const bd=badges();lastSig=JSON.stringify(bd);
+ const T=(k,n,s,o={})=>`<button class="tile ${o.c||''}" ${o.d?'disabled':''} onclick="S.view='${k}';R()"><span class="tn"><span class="ic">${TI[k]||'🏘'}</span>${n}</span><span class="ts">${s}</span>${bd[k]?`<span class="bdg ${bd[k][1]}">${bd[k][0]}</span>`:''}</button>`;
+ return `<div class="card"><h2>人界</h2><p class="sub">整備樞紐。出發前補給、製作，回來後賣出收穫。</p>
+ <div class="sec">補給與製作</div><div class="tiles">${T('shop','萬象雜貨行','賈布斯・界石、誘餌、收購')}${T('forge','萬界鍛造鋪','雷恩・釣竿、裝備')}${T('diner','異界大排檔','花嬸・料理、收購魚與植物')}</div>
+ <div class="sec">出發</div><div class="tiles">${T('station','世界中轉站','通往各界・穿梭大千',{c:'go'})}</div>
+ <div class="sec">收藏與農場</div><div class="tiles">${T('museum','大千博覽館','墨老・里程碑、芸生園')}${T('shen','森羅殿',S.shen?'緣貔・農場與對話':'尚未落成',{d:!S.shen})}</div>
+ <div class="sec">生活</div><div class="tiles">${T('house','探索者小屋','睡覺、儲物、裝備')}${T('board','公告欄委託所','阿吉・每日懸賞')}</div></div>`}
+function shop(){return `<div class="card"><h2>萬象雜貨行</h2><p class="sub">老闆賈布斯。核心門票「界石」是隨機共鳴傳送的必需品。</p><div class="list">${buyRow('界石','stone',50,'隨機共鳴傳送用')}${buyRow('野獸誘餌','bait',20,'引開堵門的野獸')}</div></div><div class="card"><h3>賣出</h3><p class="sub">收購獸類、鳥類、礦物與素材。</p>${sellList('jabs')}</div>`}
+function forge(){const own=(t,k,s)=>rowB(t,s,'',{label:'已擁有',d:true,tag:'已裝備'});
+ return `<div class="card"><h2>萬界鍛造鋪</h2><p class="sub">師傅雷恩。裝備放在裝備欄，不佔背包，死亡時也不會掉落。</p><div class="list">
+ ${GO('rod')?own('新手木製釣竿','rod','可在碧玉湖垂釣'):rowB('新手木製釣竿',`<span class="${S.coins<30?'lack':''}">30 界幣</span><br>可在碧玉湖垂釣`,"if(pay(30)){S.owned.rod=1;S.gear.rod=1;log('買下新手木製釣竿。')}R()",{d:S.coins<30})}
+ ${GO('armor')?own('石英輕甲','armor','減少受到的體力損失'):recipe('石英輕甲','armor',RF.armor,0,'夜間襲擾、狩獵失敗等受到的體力損失減少；硬闖傳送門 +20%')}
+ ${showOb()?(GO('obblade')?own('地獄黑曜石刃','obblade','狩獵成功率 +25%（與利刃短刀同類，不疊加）'):recipe('地獄黑曜石刃','obblade',RF.obblade,500,'與利刃短刀同類，更鋒利：所有狩獵成功率 +25%；硬闖傳送門 +15%')):''}
+ ${GO('blade')?own('利刃短刀','blade','狩獵成功率 +15%'):recipe('利刃短刀','blade',RF.blade,0,'所有狩獵成功率 +15%；硬闖傳送門 +10%')}
+ ${showBr()?(GO('bracelet')?own('獸骨手鐲（亡靈）','bracelet','夜間襲擾機率 12% 降到 4%'):recipe('獸骨手鐲（亡靈）','bracelet',RF.bracelet,100,'鎮攝掠食者：夜間被襲擾機率 12% 降到 4%')):''}
+ ${showExo()?(GO('exo')?own('外骨骼裝甲','exo','行動體力消耗 -20%（護甲類）'):recipe('外骨骼裝甲','exo',RF.exo,3000,'以屍骨簇與旱災擬岩鱷皮製成：在異界行動的體力消耗減少 20%')):''}
+ ${showCr()?(GO('crown')?own('夜鷹頭冠','crown','追蹤緣氏珍珠鼯鼠成功率 +17%'):recipe('夜鷹頭冠','crown',RF.crown,100,'以密林鴞的羽翼製成：追蹤緣氏珍珠鼯鼠的成功率大幅提高')):''}
+ ${(S.mtSeen||GO('hook'))?(GO('hook')?own('攀岩鉤','hook','可攀爬嶽嵒峭的岩壁'):recipe('攀岩鉤','hook',RF.hook,0,'山界嶽嵒峭岩壁的攀爬工具；永久裝備')):''}
+ ${recipe('高級檯燈','lamp',RF.lamp,100,'加工後售價 1400 界幣','加工')}
+ </div></div>`}
+function diner(){return `<div class="card"><h2>異界大排檔</h2><p class="sub">老闆娘花嬸。吃東西回體力；做好的料理放進背包，到背包頁按「使用」。</p><div class="list">
+ ${buyRow('基礎乾糧','ration',10,'回 15 體力')}
+ ${recipe('牧野烤鼠','roast',RD.roast,0,'回 30 體力')}
+ ${recipe('牧野風味魚肉拼盤','platter',RD.platter,0,'回 60 體力')}
+ ${recipe('玉璽燒','yuxiyaki',RD.yuxiyaki,10,'回 50 體力；10 次行動內移動消耗 -10%')}
+ ${recipe('迷迭香味料','spice',RD.spice,10,'使用後 10 次行動內，吃下的食物體力恢復 +5','調味')}
+ ${S.mtSeen?recipe('氧氣瓶','o2',RD.o2,0,'回復被缺氧扣除的體力上限（解氧石×3）','調製')+recipe('治療包','kit',RD.kit,0,'治好骨裂（萬年苜蓿×1、百年苜蓿×1）','調製')+recipe('解毒藥','antid',RD.antid,0,'解除中毒狀態（百年苜蓿×3）','調製')+recipe('麻醉藥','anes',RD.anes,0,'骨裂時使用，10 次行動內不再受骨裂劇痛影響，但不會治好（破曉百合×2、旱魃草×1）','調製'):''}
+ </div></div><div class="card"><h3>賣出</h3><p class="sub">收購魚類與植物。</p>${sellList('hua')}</div>`}
+function enterRealm(r,m){S.visited=1;if(r==='mu')S.muSeen=1;S.loc='realm';S.realm=r;S.place=r==='mt'?'gorge':'gate';S.view='town';S.pend=null;S.hyp=0;S.hypC=0;S.rain=0;S.quake=0;if(r==='mt')S.mtSeen=1;log(m);R();warpFx(r)}
+function warpFx(r){const mt=r==='mt',c1=mt?'#c98a4b':'#7ccf8a',c2=mt?'#f4e3c4':'#e8ffe0';try{sfx('lv')}catch(e){}
+ showFx(`<div class="warp" style="--c1:${c1};--c2:${c2}"><div class="wv"></div><div class="wr"></div><div class="wr r2"></div><div class="wt"><small>界石共鳴・跨越界域</small><b>${mt?'山　界':'牧野界'}</b><small>${mt?'群峰入雲，終年日照':'草原無垠，風起雲湧'}</small></div></div>`,1700)}
+function station(){const p=S.pointer?400:500,seen=!!S.muSeen,mtOn=true;
+ const rnd=`if(take('stone')){if(${mtOn}&&Math.random()<.5)enterRealm('mt','界石化為微光，你被傳送到了連綿的山界。');else enterRealm('mu','界石化為微光，你被傳送到了牧野界。')}else{log('你沒有界石。');R()}`;
+ return `<div class="card"><h2>世界中轉站</h2><p class="sub">星域探索・妙境造諸極，自非言可詮</p><div class="list">
+ ${rowB('隨機共鳴',`消耗界石×1（有 ${cnt('stone')}）・盲盒前往`,rnd,{label:'出發',c:'pri',d:!cnt('stone')})}
+ ${seen?rowB('定向傳送：牧野界',`<span class="${S.coins<p?'lack':''}">${p} 界幣</span>${S.pointer?'（先驅者指針減免 100）':''}`,`if(pay(${p})){enterRealm('mu','你支付傳送費，前往牧野界。')}`,{label:'傳送',d:S.coins<p}):''}
+ ${S.mtSeen?rowB('定向傳送：山界',`<span class="${S.coins<600?'lack':''}">600 界幣</span>`,`if(pay(600)){enterRealm('mt','你支付傳送費，前往山界。')}`,{label:'傳送',d:S.coins<600}):''}
+ </div></div>`}
+const HINT={lily:'破曉百合只在天剛亮前後開花，在草原上等一等吧。',c100:'百年苜蓿嘛，跟著迷迭兔走，準沒錯。',c10k:'萬年苜蓿……神木草質龍最愛吃那個，也許牠的巢附近會有。',trout:'艷陽鱒只在早上出現，記得帶釣竿去碧玉湖。',eagle:'明武熊鷹白天才出沒，抬頭看天空。',owl:'密林鴞是夜裡的主人，牠飛起來一點聲音都沒有。',cat:'禾斑貓夜裡比較容易碰到，牠很會躲。',squirrel:'珍珠鼯鼠晝伏夜出，要去森林裡趁夜晚找。',lantern:'南瓜燈籠石在森林深處，夜裡會發藍光，比較好找。',star:'天外星體只有流星劃過的夜裡才有機會，那得靠運氣。',dragon:'神木草質龍的巢穴在草原上，找到了也別靠太近。',frog:'碧玉湖蛙躲在湖岸的泥沼裡。',bream:'淡水鯛在碧玉湖下游，帶釣竿去就釣得到。',rabbit:'迷迭兔耳朵很靈，慢慢跟著牠就行。',wave:'多採幾次回聲草，說不定會碰上風浪。',leap:'早上釣到艷陽鱒的瞬間……你會看到的。',smoke:'回家的路被狼群堵住的時候，你就會看到。',weaver:'織布鳥就住在日裳樹上，到草原上留心看。',heron:'盜賊鷺就在湖邊，釣魚的時候牠會來找你。',sun:'日裳樹，去萬象森林就看得到。',yuxi:'玉璽草長在日裳樹的樹蔭下。',quartz:'牧野石英在綠林道，一出傳送門就能撿。',wolf:'森林狼在綠林道常常結群，小心點。',rat:'長尾鼠到處都是，草原上隨便找。',echo:'回聲草整片草地都是。'};
+const CHAT={
+realm:[['牧野界啊……我第一次踏進去的時候，風是從腳邊往上吹的。整片草都在說話，那就是回聲草。','那時候我連傳送門都不敢離太遠，結果一待就是好幾年。','白天它很溫和，入夜之後才是它真正的樣子。夜露冰涼，森林裡的密林鴞連一點聲音都沒有。'],
+['碧玉湖是我最愛的地方。早上去釣魚，要是運氣好釣到艷陽鱒，鱗片被陽光一照……唉，我說不出來，你自己看過就知道。','淡水鯛是我命名的。牠有點土腥味，可是數量最多，沒有牠，湖裡就太寂寞了。','盜賊鷺很狡猾，你一拉竿牠就來。我被搶過不知多少回，習慣了。'],
+['萬象森林裡有一種石頭，晚上會發淡藍色的光。第一次看到我還以為是鬼火，嚇得差點扔了背包。','森林狼常在綠林道結群徘徊，要回家的時候千萬小心。帶一份野獸誘餌，比你想的有用。','還有那頭神木草質龍，牠不惹事，你別去惹牠就好。我說「別偷蛋」，你大概是不會聽的吧？']],
+self:[['我？我只是個到處亂跑的老探險者罷了。不過，牧野界是我第一個發現的，這件事我倒是挺驕傲的。','別人去了就想找稀有的東西，賣大價錢。我不同，我光是在草地上坐一整天，看迷迭兔怎麼躲禾斑貓，就能開心。'],
+['我把大半輩子都花在牧野界的調查上。每一種生物吃什麼、怕什麼、什麼時辰出沒，我都記在手札裡。','你現在用的圖鑑，很多格子最早是我一筆一筆寫出來的。','這座森羅殿，是我想把牧野界的植物帶回人界種種看。結果，真的長得出來。'],
+['有人問我：為什麼不去別的界？我說，一個界就夠研究一輩子了。','不過你讓我有點好奇，外面到底還有多少界。你可要好好探索，下次回來告訴我。']],
+rumor:[['……你想聽傳聞？好吧，這件事我很少跟人說。','很久以前，牧野的草原上有一個霸主。牠比任何猛獸都大，巡視著整片草原。','後來氣候變了，草變得稀疏，獵物也跟著消失，牠就這樣在百年前滅絕了。','但我總覺得，牠還在。有時深夜，草原深處會有蒼白的幽光。你要是想見牠，就在夜裡靜靜地等吧。']],
+lion:[['……你真的見到牠了？（沉默）','我只見過牠一次。牠就站在那裡，什麼也沒做，我卻動不了。','牠是牧野界上一代的王。這個故事我寫在手札裡，今天輪到你了。','這個指針是我當年用來尋找牠的，現在傳給你。它會替你縮短回牧野界的路。']]};
+function chatLines(t){if(t==='prog'){const n=DR('mu').filter(d=>d[0]!=='lion'&&S.dex[d[0]]).length,m=DR('mu').find(d=>d[0]!=='lion'&&!S.dex[d[0]]);
+  const L=[`讓我看看你的圖鑑……已經登錄 ${n} 種了。`];
+  if(m)L.push(`你還沒登錄的有【${m[1]}】。${HINT[m[0]]||''}`);else L.push(S.dex.lion?'25 種全部登錄，連牠都見到了。你比我年輕時強多了。':'25 種全部登錄了！不過……牧野界還有個傳聞，你想聽聽看嗎？');
+  return L}
+ const k=S.tk||(S.tk={}),a=CHAT[t],n=k[t]||0;k[t]=n+1;return a[n%a.length]}
+function talk(t){S.chat={t,i:0,lines:chatLines(t)};R()}
+function nextLine(){const c=S.chat;if(!c)return;c.i++;if(c.i>=c.lines.length)endChat();else R()}
+function endChat(){const t=S.chat&&S.chat.t;S.chat=null;if(t==='item')S.showMenu=1;
+ if(t==='rumor'&&!S.lionOpen){S.lionOpen=true;log('緣貔低聲說：深夜的牧野草原上，偶爾會有蒼白的幽光……（已解鎖「深夜靜候幽光」）')}
+ if(t==='lion'&&S.dex.lion&&!S.pointer){S.pointer=true;log('🧭 緣貔把傳奇遺物【先驅者指針】交給你。永久綁定，死亡不掉落；牧野界定向傳送降為 400。')}R()}
+const IL={
+echo:['回聲草啊，到處都是。你有沒有發現，把耳朵貼近牠，能聽到很遠很遠的風聲？','我年輕的時候拿牠做過枕頭，結果整晚都在聽狼嚎，睡不著。'],
+yuxi:['玉璽草……這是日裳樹的孩子。','別小看牠。花嬸的玉璽燒，就是靠這小東西撐起來的。'],
+lily:['破曉百合！你真的在天亮前後找到了。','它只開一小會兒，我追了三個早晨才採到第一朵。','小心，它有微毒，別拿來泡茶。'],
+c100:['百年苜蓿，每一株都是一百年的耐心。','別捨不得吃，它真的能讓人精神一振。不過賣掉也不虧就是了。'],
+c10k:['這、這是……萬年苜蓿！金光閃閃的……','我當年看到神木草質龍捧著吃，口水都要流下來了。','你要種的話，成功率只有六成，要有心理準備。'],
+trout:['艷陽鱒。你是早上去釣的吧？','那一瞬間，鱗片把陽光整個反射上來……是不是像第二個太陽？'],
+bream:['緣氏淡水鯛！這名字是我取的，怎麼樣，有沒有一點榮耀感？','味道嘛……有點土腥，不過配上花嬸的手藝就沒問題了。'],
+eagle:['明武熊鷹……你居然把牠請下來了。','牠的眼睛能看兩公里，連我躲在草裡都沒逃過牠的眼睛。'],
+owl:['密林鴞。你有沒有聽到牠飛過的聲音？','……沒有對吧？這就是牠可怕的地方。'],
+rat:['長尾鼠，牧野最常見的小傢伙。','牠遇到危險會把尾巴豎起來假裝成回聲草，可惜熊鷹早就識破了。'],
+rabbit:['迷迭兔，耳朵比誰都靈。','你跟著牠走過吧？牠的排泄物有迷迭香的味道，拿來調味出奇地好用。'],
+cat:['牧野禾斑貓！牠很會躲，你居然逮得到。','獵人都想訓練牠當夥伴，可惜我這輩子只成功被牠抓過。'],
+wolf:['森林狼……你一定被牠們堵過門吧？','別怕，每個新手都會。下次記得帶誘餌，狼群最愛爭那個。'],
+squirrel:['珍珠鼯鼠！我替牠取的名字……','牠有七成的機率逃過密林鴞，你竟然還抓到了。這運氣，去買彩券吧。'],
+quartz:['牧野石英，綠林道的老朋友。','別小看這種石頭，雷恩把牠做成輕甲，可比皮革耐磨多了。'],
+lantern:['南瓜燈籠石……天哪，你在森林深處真的找到了。','夜裡淡藍色的光，我第一次看到的時候，以為是整座森林在呼吸。','拿去給雷恩，他能做出整個人界最漂亮的檯燈。'],
+star:['……這是，天外星體？','你知道這有多罕見嗎？我在牧野待了這麼多年，只遠遠看過一次流星墜落。','（他的手微微發抖）小心收好，別讓人看見你有這東西。'],
+slime:['湖蛙的黏液，保濕得很。','以後說不定能做成抗高溫的藥，我在手札裡記了一筆。'],
+egg:['你……去偷了龍蛋？','母龍要是知道，會氣到把整片草原踩平。……不過你還活著回來，我就不罵你了。','好好保管，將來說不定能孵出坐騎。'],
+lamp:['高級檯燈！光線溫柔得很。','雷恩的手藝，真是沒話說。'],
+ration:['乾糧嗎？樸素，可靠，我最愛了。'],
+yuxiyaki:['玉璽燒！花嬸的招牌。','趁熱吃，跑起來都省力。'],
+platter:['牧野風味魚肉拼盤，一次吃到兩種魚的美味。','你可別全部自己吃光，留一點給我嚐嚐。'],
+roast:['烤鼠啊，野外最實在的一餐。','肉有點乾，不過配水剛好。'],
+dung:['……你特地帶這個來給我看？','哈哈，沒事，我懂，這是調味料的原料嘛。'],
+spice:['迷迭香味料！好東西。','撒一點在料理上，吃進去的力氣都多幾分。'],
+bait:['野獸誘餌，賈布斯那邊賣的吧。','記住，狼群比你想的更餓，丟遠一點再跑。'],
+fert:['肥料，我農場的命脈。','撒下去，作物成熟的速度會快上一倍。'],
+stone:['界石……每個探險者的第一張船票。','我第一次握著它的時候，手心全是汗。'],
+bones:['這是……（沉默了很久）','這具遺骸，是牠嗎？那個牧野的王。','……謝謝你把牠帶回來。雷恩一定能好好處理。'],
+g_rod:['新手木製釣竿。我當年也是靠這種釣竿起家的。'],
+g_armor:['石英輕甲，穿起來是不是很踏實？','有它在，夜裡被偷襲也比較不那麼疼。'],
+g_blade:['利刃短刀，磨得很亮。','用的時候別割到自己。'],
+g_bracelet:['獸骨手鐲（亡靈）……','戴著它的時候，是不是覺得夜晚沒那麼可怕了？','那是牠在替你看著。'],
+g_obblade:['地獄黑曜石刃……黑紫色的刃口，真的會吸光。','削鐵如泥不是誇張，收鞘的時候小心點。'],
+g_exo:['外骨骼裝甲……鱷魚皮加屍骨簇，你可真下得了本錢。','穿上它走山路，腿都輕了不少。'],
+g_hook:['攀岩鉤……用奧古斯精鐵、牧野石英和木茅綁成的吧。','山界的岩壁可不會原諒掛不穩的人，繫牢一點。'],
+g_crown:['夜鷹頭冠……三隻密林鴞的羽翼，你還真下得了手。','戴上它，夜裡的鼯鼠就會覺得你是同類。','……大概啦。'],
+g_pointer:['先驅者指針……我把它交給你，果然沒看錯人。','它會一直指著牧野界的方向，替你找回去的路。']};
+const GN={g_rod:'新手木製釣竿',g_armor:'石英輕甲',g_blade:'利刃短刀',g_bracelet:'獸骨手鐲（亡靈）',g_pointer:'先驅者指針',g_crown:'夜鷹頭冠',g_hook:'攀岩鉤',g_exo:'外骨骼裝甲',g_obblade:'地獄黑曜石刃'};
+function ownedShow(){const ids=new Set([...Object.keys(S.inv),...Object.keys(S.stash),...Object.keys(S.box||{})].filter(k=>I[k]&&IL[k]));
+ ['rod','armor','blade','bracelet','crown','hook','exo','obblade'].forEach(k=>GO(k)&&ids.add('g_'+k));if(S.pointer)ids.add('g_pointer');return [...ids]}
+function showItem(id){(S.shown||(S.shown={}))[id]=1;S.showMenu=0;S.chat={t:'item',i:0,lines:IL[id]||['嗯，這是個有意思的東西。']};R()}
+function showMenuCard(){const ids=ownedShow(),sh=S.shown||{};
+ return `<div class="card"><div class="dlg"><div class="av">緣</div><div class="bub"><b>緣貔</b><p>${ids.length?'拿什麼給我看看？你身上的東西，我都想瞧瞧。':'你身上好像沒什麼可以看的……先去牧野界帶點東西回來吧。'}</p></div></div>
+ <div class="chips">${ids.map(id=>B((I[id]?I[id].n:GN[id])+(sh[id]?' ✓':''),`showItem('${id}')`,{c:sh[id]?'on':''})).join('')}</div>
+ <p class="sub" style="margin:0 0 8px">已給緣貔看過 ${Object.keys(sh).length} 種。看過的有 ✓ 標記，可以重複看。</p>${B('不看了',"S.showMenu=0;R()")}</div>`}
+function chatCard(){const c=S.chat;if(!c&&S.showMenu)return showMenuCard();
+ if(c)return `<div class="card"><div class="dlg"><div class="av">緣</div><div class="bub"><b>緣貔</b><p>${c.lines[c.i]}</p></div></div><div class="grid">${B(c.i+1>=c.lines.length?'結束對話':'下一句',`nextLine()`,{c:'pri',s:`${c.i+1}/${c.lines.length}`})}${c.i+1<c.lines.length?B('略過',`endChat()`):''}</div></div>`;
+ return `<div class="card"><div class="dlg"><div class="av">緣</div><div class="bub"><b>緣貔</b><p>${S.dex.lion&&!S.pointer?'……你的臉色不太一樣。是不是見到了什麼？':'來啦，探險者。想聊點什麼？牧野界的事，我可以講一整天。'}</p></div></div>
+ <div class="grid">${B('聊聊牧野界',"talk('realm')")}${B('聊聊緣貔自己',"talk('self')")}${B('給他看圖鑑',"talk('prog')")}${B('給他看物品',"S.showMenu=1;R()")}${B(S.lionOpen?'再聽一次草原霸主的傳聞':'打聽草原的傳聞',"talk('rumor')")}${S.dex.lion?B(S.pointer?'再聽一次獅亡魂的故事':'告訴他你見到了獅亡魂',"talk('lion')",{c:S.pointer?'':'pri'}):''}</div></div>`}
+function gearCard(){const G=[['rod','新手木製釣竿','可以在碧玉湖垂釣。','在萬界鍛造鋪購買'],['armor','石英輕甲','夜間襲擾、狩獵失敗、偷蛋失敗時受到的體力損失減少；硬闖傳送門成功率 +20%。','在萬界鍛造鋪打造'],['blade','利刃短刀','所有狩獵成功率 +15%；硬闖傳送門成功率 +10%。','在萬界鍛造鋪打造'],['bracelet','獸骨手鐲（亡靈）','鎮攝掠食者：夜間被襲擾的機率從 12% 降到 4%。','來歷不明'],['obblade','地獄黑曜石刃','所有狩獵成功率 +25%，硬闖傳送門 +15%。與利刃短刀同類，不疊加。','在萬界鍛造鋪打造'],['exo','外骨骼裝甲','在異界行動的體力消耗減少 20%。與石英輕甲同為護甲類，只能裝備一件。','在萬界鍛造鋪打造'],['hook','攀岩鉤','可以攀爬嶽嵒峭的岩壁，通往玄脈山頂峰與上層礦脈。','在萬界鍛造鋪打造'],['crown','夜鷹頭冠','追蹤緣氏珍珠鼯鼠的成功率 +17%。','在萬界鍛造鋪打造'],['pointer','先驅者指針','牧野界定向傳送費用 500 降為 400。永久綁定。','來歷不明']];
+ const own=k=>k==='pointer'?S.pointer:GO(k),st=[],mine=G.filter(g=>own(g[0]));
+ st.push(`Lv.${lvl()}・背包 ${cap()} 格`);if(S.buff>0)st.push(`玉璽燒 ${S.buff} 次`);if(S.spice>0)st.push(`迷迭香 ${S.spice} 次`);if(S.fear>0)st.push(`雙腿發軟 ${S.fear} 次`);
+ return `<div class="card"><h3>檢查裝備</h3><p class="sub">擁有的裝備可以自由選擇裝備或卸下（想空手闖界域也可以）。同類型的裝備只能裝備一件。裝備不佔背包，死亡時不會掉落。</p><div class="list">${mine.map(g=>{const k=g[0],eq=k==='pointer'?true:!!S.gear[k],conf=k==='pointer'?null:Object.keys(S.gear).find(x=>S.gear[x]&&x!==k&&SLOT[x]===SLOT[k]);return `<div class="item"><span><b>${g[1]}</b> <span class="tag">${eq?'已裝備':'未裝備'}</span>${SLOT[k]?`<span class="tag">${SLN[SLOT[k]]}</span>`:''}<br><span class="mute">${g[2]}</span>${!eq&&conf?`<br><span class="mute">同類型的「${GN['g_'+conf]}」裝備中，需先卸下。</span>`:''}</span>${k==='pointer'?'':`<span class="acts">${eq?B('卸下',`unequip('${k}')`):B('裝備',`equip('${k}')`,{d:!!conf})}</span>`}</div>`}).join('')||'<p class="sub">目前沒有任何裝備。</p>'}</div>${Object.keys(S.gear).some(x=>S.gear[x])?`<div class="grid" style="margin-top:8px">${B('全部卸下',"unequipAll()")}</div>`:''}<p class="sub" style="margin:8px 0 0">目前狀態：${st.map(x=>`<span class="tag">${x}</span>`).join('')}</p></div>`}
+function house(){const bx=S.boxOn?`<div class="card"><h3>旅行箱（5 格・死亡不掉落）${used(S.box)}/5</h3>${Object.keys(S.box).map(id=>`<div class="item"><span>${rn(id)} ×${S.box[id]}</span><span class="acts">${B('取出',`mv2('box','inv','${id}')`)}</span></div>`).join('')||'<p class="sub">空的。</p>'}<p class="sub">從背包放入：</p>${Object.keys(S.inv).map(id=>`<span class="acts">${B(I[id].n+' ×'+S.inv[id],`mv2('inv','box','${id}')`)}</span> `).join('')}</div>`:'';
+ return `<div class="card"><h2>探索者小屋</h2><p class="sub">你在異界陣亡後，會在這裡甦醒。</p><div class="grid">${B('睡覺',"if(S.energy>=100){log('體力已經滿了，不需要睡覺。');R();return}if(pay(10)){S.energy=100;S.t=(Math.floor(S.t/1440)+1)*1440+360;log('睡了一覺，體力補滿，現在是清晨 06:00。')}R()",{s:S.energy>=100?'體力已滿，不需要睡覺':'10 界幣・體力補滿',d:S.energy>=100})}</div>
+ </div>
+ ${gearCard()}
+ ${bx}<div class="card"><h3>儲物櫃（不限格數・人界安全）</h3>${Object.keys(S.stash).map(id=>`<div class="item"><span>${rn(id)} ×${S.stash[id]}</span><span class="acts">${B('取 1',`mv2('stash','inv','${id}',1)`)}${B('全取',`mv2('stash','inv','${id}')`)}</span></div>`).join('')||'<p class="sub">空的。</p>'}
+ <p class="sub">背包物品存入：</p>${Object.keys(S.inv).map(id=>`<span class="acts">${B(I[id].n+' ×'+S.inv[id],`mv2('inv','stash','${id}')`)}</span> `).join('')||'（背包是空的）'}</div>`}
+function mv2(a,b,id,n){const src=S[a],dst=S[b];let k=n||src[id]||0,m=0;
+ for(;m<k;m++){dst[id]=(dst[id]||0)+1;const lim=b==='inv'?cap():b==='box'?5:1e9;if(used(dst)>lim){dst[id]--;if(!dst[id])delete dst[id];break}}
+ if(m){src[id]-=m;if(!src[id])delete src[id]}else log('空間不足。');R()}
+const msDone=m=>m.ids?m.ids.every(i=>S.dex[i]):DR('mu').filter(d=>m.cats.includes(d[2])&&d[0]!=='lion').every(d=>S.dex[d[0]]);
+function claim(id){const m=MS.find(x=>x.id===id);if(!msDone(m)||S.ms[id])return;S.ms[id]=1;S.coins+=m.coin;log(`博覽館里程碑【${m.n}】完成，獎勵 ${m.coin} 界幣。`);
+ if(MS.every(x=>S.ms[x.id])&&!S.boxOn){S.boxOn=true;log('🧳 全部里程碑完成！墨老送你「旅行箱」：5 個特殊格位，放在裡面的東西死亡也不會掉落。（到探索者小屋整理）')}R()}
+const PF={bream:{t:90,x:40},trout:{t:60,x:65}};
+const pond=()=>S.pond||(S.pond={fish:[],t0:0});
+function pondInfo(){const p=pond(),n=p.fish.length;if(!n)return null;return {n,t:Math.max(60,Math.round(p.fish.reduce((a,id)=>a+PF[id].t,0)/n)),x:p.fish.reduce((a,id)=>a+PF[id].x,0)+10*(n-1)}}
+function pondPut(id){const p=pond();if(p.fish.length>=4||!take(id)){log('池塘放不下了，或你沒有這種魚。');return R()}p.fish.push(id);p.t0=Date.now();log(`把【${I[id].n}】放進芸生園的池塘，計時重新開始。`);R()}
+function pondTake(i){const p=pond(),id=p.fish.splice(i,1)[0];if(id){addHome(id);p.t0=Date.now();log(`取回【${I[id].n}】，計時重新開始。`)}R()}
+function pondClaim(){const p=pond(),f=pondInfo();if(!f||Date.now()-p.t0<f.t*60000)return;gainExp(f.x);p.t0=Date.now();log(`芸生園的魚群產出了經驗值，獲得 ${f.x} EXP。`);R()}
+function pondCard(){const p=pond(),f=pondInfo(),el=f?Date.now()-p.t0:0,left=f?Math.max(0,f.t*60000-el):0,ready=f&&left<=0;
+ const slots=[0,1,2,3].map(i=>{const id=p.fish[i];return id?`<div class="plot"><b class="r-${RC[I[id].r]}">${I[id].n}</b><br>${B('取回',`pondTake(${i})`)}</div>`:`<div class="plot"><span class="mute">空位</span></div>`}).join('');
+ const have=Object.keys(PF).filter(id=>cnt(id));
+ const m=Math.ceil(left/60000);
+ return `<div class="card"><h2>芸生園</h2><p class="sub">博覽館的後院，有一座池塘。放入釣到的魚，魚群會慢慢產出經驗值。魚越多、越稀有，產出越多，所需時間也越短（最少 1 小時）。更多池位將在 2.0 版開放。</p>
+ <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))">${slots}</div>
+ <p class="sub" style="margin:10px 0 6px">${f?`目前魚群：${f.n}/4 隻・每次產出 ${f.x} EXP・需 ${f.t} 分鐘。${ready?'已經可以領取！':`還要約 ${m>=60?Math.floor(m/60)+' 小時 '+(m%60)+' 分鐘':m+' 分鐘'}。`}`:'池塘還是空的。到碧玉湖釣魚，再把魚帶來吧。'}</p>
+ ${f?`<div class="tugbar" style="margin:6px 0"><i style="width:${Math.min(100,el/(f.t*600))}%"></i></div>`:''}
+ <div class="grid">${B(ready?`領取經驗值 +${f.x}`:'領取經驗值',`pondClaim()`,{c:ready?'pri':'',d:!ready})}${have.map(id=>B(`放入 ${I[id].n}`,`pondPut('${id}')`,{d:p.fish.length>=4,s:`有 ${cnt(id)}・${PF[id].x} EXP／${PF[id].t} 分鐘`})).join('')}</div></div>`}
+function museum(){return `<div class="card"><h2>大千博覽館・墨老</h2><p class="sub">現象會化為動態卷軸展示，礦物擺成實體模型。完成全部里程碑可獲得旅行箱。</p><div class="list">${MS.map(m=>{const d=msDone(m);return `<div class="item"><span><b>${m.n}</b>${S.ms[m.id]?' ✔':''}<br><span class="mute">${m.d}・獎勵 ${m.coin} 界幣</span></span>${B(S.ms[m.id]?'已領取':d?'領取':'未達成',`claim('${m.id}')`,{d:!d||!!S.ms[m.id]})}</div>`}).join('')}</div><p class="sub">旅行箱：${S.boxOn?'已取得':'未取得'}</p></div>${pondCard()}`}
+function bounties(){const day=new Date().toISOString().slice(0,10);if(S.bday!==day){S.bday=day;S.bdone={};S.relief=''}
+ const n=Math.floor(Date.parse(day)/864e5),r=[0,3,6].map(i=>POOL[(n+i)%POOL.length]);if(S.mtSeen)r.push(MPOOL[n%MPOOL.length],MPOOL[(n+4)%MPOOL.length]);return r}
+function turnIn(i){const b=bounties()[i];if(S.bdone[i]||cnt(b[0])<b[1])return;take(b[0],b[1]);S.bdone[i]=1;S.coins+=b[2];if(b[2]>=200){addHome('fert');log('額外獲得肥料×1。')}log(`完成委託，獲得 ${b[2]} 界幣。`);R()}
+function board(){const b=bounties();return `<div class="card"><h2>公告欄委託所・阿吉</h2><p class="sub">每日懸賞（每天更新）。可從背包或儲物櫃繳交。</p><div class="list">${b.map((x,i)=>`${i===3?'<div class="sec">山界委託</div>':''}<div class="item"><span>繳交 ${rn(x[0])}×${x[1]}（有 ${cnt(x[0])}）<br><span class="mute">獎勵 ${x[2]} 界幣${x[2]>=200?' + 肥料':''}</span></span>${B(S.bdone[i]?'已完成':'繳交',`turnIn(${i})`,{d:!!S.bdone[i]||cnt(x[0])<x[1]})}</div>`).join('')}</div></div>
+ <div class="card"><h3>救濟金</h3><p class="sub">界幣少於 50 且沒有界石時，每日可領一次 50 界幣，避免卡死。</p>${B('申請救濟金',"if(S.coins<50&&!cnt('stone')&&S.relief!==S.bday){S.coins+=50;S.relief=S.bday;log('領到 50 界幣救濟金。')}else log('條件不符，或今天已領過。');R()",{d:!(S.coins<50&&!cnt('stone')&&S.relief!==S.bday)})}</div>`}
+function plant(i,id){if(!take(id)){log('沒有這個種子。');return R()}const f=FARM[id];
+ S.farm[i]={id,end:Date.now()+f[0]*1000,sp:f[1],ok:Math.random()*100<f[1],f:0};log(`種下${I[id].n}（成功率 ${f[1]}%）。可以點擊這一格使用肥料。`);R()}
+function askFert(i){S.fertAsk=S.fertAsk===i?null:i;R()}
+function useFert(i){const p=S.farm[i];S.fertAsk=null;if(!p||p.f||Date.now()>=p.end)return R();
+ if(!take('fert')){log('你沒有肥料，可以向緣貔購買。');return R()}
+ p.f=1;p.end=Date.now()+(p.end-Date.now())/2;p.sp=Math.min(100,p.sp+20);if(!p.ok)p.ok=Math.random()*100<p.sp;
+ log(`對${I[p.id].n}使用肥料：剩餘時間減半，成功率提升至 ${p.sp}%。`);R()}
+function harvest(i){const p=S.farm[i];if(!p||Date.now()<p.end)return;S.farm[i]=null;if(p.ok){const n=id=>addHome(id,2);n(p.id);log(`收成 ${I[p.id].n}×2。`)}else log('這一格的作物枯萎了。');R()}
+function shen(){if(!S.shen)return `<div class="card"><h2>森羅殿</h2><p>牧野界 25 種常規圖鑑全數登錄後，緣貔會回歸人界並落成此地（目前 ${D.filter(d=>d[0]!=='lion'&&S.dex[d[0]]).length}/25）。</p></div>`;
+ const seeds=Object.keys(FARM).filter(id=>cnt(id));
+ const story='';
+ return `${chatCard()}<div class="card"><h2>森羅殿・緣貔的農場</h2><p class="sub">10 格靈土。品級越高成熟越久，也越可能失敗。收成每次 2 個。</p><div class="grid">${B('買 肥料',"if(pay(50)){addHome('fert');log('買下肥料。')}R()",{s:`50 界幣・時間減半、成功率 +20%（有 ${cnt('fert')}）`})}${story}</div></div>
+ <div class="card"><h3>靈土</h3><div class="grid">${S.farm.map((p,i)=>{if(!p)return `<div class="plot">空地 ${i+1}<br>${seeds.length?seeds.map(id=>`<button class="btn" style="padding:2px 8px;font-size:12px;margin:2px 2px 0 0" onclick="plant(${i},'${id}')">${I[id].n}（${FARM[id][1]}%）</button>`).join(''):'<span class="mute">沒有可種植的植物</span>'}</div>`;
+  const left=Math.ceil((p.end-Date.now())/1000);
+  if(left<=0)return `<div class="plot">${I[p.id].n}<br>${B('收成',`harvest(${i})`,{c:'pri'})}</div>`;
+  const ask=S.fertAsk===i&&!p.f;
+  return `<div class="plot"><button class="btn" style="width:100%;padding:4px 8px" onclick="askFert(${i})">${I[p.id].n}${p.f?' 已施肥':''}<small>還要 ${left} 秒・成功率 ${p.sp}%${p.f?'':'・點擊可施肥'}</small></button>${ask?`<p style="margin:6px 0 4px">要使用肥料嗎？（有 ${cnt('fert')}）</p><span class="acts">${B('使用肥料',`useFert(${i})`,{c:'pri',d:!cnt('fert')})}${B('取消',`askFert(${i})`)}</span>${cnt('fert')?'':'<small class="mute">沒有肥料，可向緣貔購買。</small>'}`:''}</div>`}).join('')}</div></div>
+ <div class="card"><h3>緣貔收購（瑰寶以上，1.2 倍）</h3>${sellList('',1.2,id=>['瑰寶','幻奇','神隱'].includes(I[id].r))}</div>`}
+function realmView(){const o=[];if(S.realm==='mt')return mtView();
+ if(S.pend==='starwolf')return `<div class="card alert"><h2 class="red">光芒吸引了森林狼的注意</h2><p>狼群圍在隕星旁，低吼著逼近。野獸誘餌可以引開牠們；否則只能硬闖開採（體力 -25，失敗會死亡）。</p><div class="grid">${B('使用野獸誘餌',"starBait()",{d:!cnt('bait'),c:'pri',s:`持有 ${cnt('bait')}`})}${B('硬闖開採',"starRush()",{c:'warn',s:`成功率約 ${Math.round(Math.min(95,60+(S.gear.armor?20:0)+(S.gear.blade?10:0)))}%`})}${B('先離開',"S.pend=null;R()")}</div></div>`;
+ if(S.pend==='tugend'&&tugRes){const w=tugRes.win,dis=Date.now()-tugRes.t<1200;return `<div class="card ${w?'':'alert'}"><h2>${w?'搶奪成功！':'搶奪失敗'}</h2><p>${w?`你死命一拉，把【${I[tugRes.g].n}】從盜賊鷺嘴裡搶了回來。`:`盜賊鷺叼著【${I[tugRes.g].n}】飛走了。`}</p>${B('繼續','S.pend=null;tugRes=null;R()',{c:'pri big',d:dis})}</div>`}
+ if(S.pend==='tug'&&tug){const el=Math.min(5,(Date.now()-tug.t0)/1000);return `<div class="card alert"><h2>盜賊鷺搶魚！</h2><p class="sub">狂按「用力拉」，在時間內把魚拉上岸。盜賊鷺會一直往回扯，停手進度就會掉。</p><div class="tugbar"><i id="tbar" style="width:${Math.min(100,tug.n/tug.need*100)}%"></i></div><div class="tugbar t" title="剩餘時間"><i style="animation-delay:-${el}s"></i></div>${B('用力拉！','pull()',{c:'pri big'})}</div>`}
+ if(S.pend==='siege')return `<div class="card alert"><h2>狼群圍堵傳送門</h2><p>回家的路被截斷了。野獸誘餌可以引開牠們，否則只能硬闖（體力 -25，失敗會死亡）。</p><div class="grid">${B('使用野獸誘餌',"bait()",{d:!cnt('bait')})}${B('硬闖傳送門',"breakout()",{c:'warn',s:`成功率約 ${Math.round(Math.min(95,60+(S.gear.armor?20:0)+(S.gear.blade?10:0)))}%`})}</div></div>`;
+ if(S.pend==='dragon')return `<div class="card alert"><h2>神木草質龍的巢穴</h2><p>巨龍在巢邊低頭啃著萬年苜蓿。巢裡有龍蛋。</p><div class="grid">${B('偷龍蛋',"stealEgg()",{c:'warn',s:'成功約 55%。失敗時損失大量體力，可能被秒殺'})}${B('只遠觀離開',"S.pend=null;log('你悄悄退開。');R()")}</div></div>`;
+ const acts=realmActs();
+ return `<div class="card"><h2>${AREAS[S.place]}</h2><p class="sub">${{gate:'初始生成地，也是傳送門所在。森林狼常在此徘徊。',grass:'無窮盡的草地，奔跑會多耗 10% 體力。',lake:'碧玉湖岸的泥沼與下游。',forest:'日裳樹遮天蔽日，深處有發光的礦石。'}[S.place]}${isNight()?' 夜裡危險度上升（侵蝕），行動時可能遭到襲擾。':''}</p><div class="grid">${acts.map((a,i)=>B((/僅夜晚/.test(a.s)?'☾ ':/僅白天/.test(a.s)?'☀ ':'')+a.t,`A(${i})`,{s:a.s,d:a.dis,c:/天外星體/.test(a.t)?'starbtn':''})).join('')}</div></div>
+ <div class="card"><h3>移動</h3><div class="grid">${['gate','grass','lake','forest'].filter(k=>k!==S.place).map(k=>B(AREAS[k],`go('${k}')`,{s:`體力 -${mv()}`})).join('')}</div></div>`}
+function A(i){realmActs()[i].f()}
+const bar=(l,v,m,c='')=>`<div class="bar ${c}"><small><span>${l}</span><span>${v}/${m}</span></small><i><b style="width:${Math.max(0,Math.min(100,v/m*100))}%"></b></i></div>`;
+function hud(){const L=lvl(),nx=LV[L]??null,pv=LV[L-1];
+ return `<div class="row"><span class="brand">大千世界</span><span class="pos">${S.loc==='realm'?(S.realm==='mt'?'山界・':'牧野界・')+AREAS[S.place]+'　':'人界　'}${clock()}</span></div>
+ <div class="bars">${bar(S.hyp?'⚡ 體力（上限 '+maxE()+'）':'⚡ 體力',Math.max(0,S.energy),100,S.energy<30?'low':'')}${nx?bar('Lv.'+L+' → '+(L+1)+' EXP',S.exp-pv,nx-pv,'x'):`<div class="bar x"><small><span>Lv.${L}（最高）</span><span>${S.exp} EXP</span></small><i><b style="width:100%"></b></i></div>`}</div>
+ <div class="stats"><span>🪙 <b>${S.coins}</b> 界幣</span><span>🎒 <b>${used(S.inv)}/${cap()}</b> 格</span>${S.boxOn?`<span>🧳 <b>${used(S.box)}/5</b></span>`:''}<span>📖 <b>${D.filter(d=>S.dex[d[0]]).length}/${dtot()||'？'}</b></span>${LSOK?`<span>已存檔 ${new Date(lastSave).toTimeString().slice(0,5)}</span>`:'<span class="lack">⚠ 無法自動存檔，請到「存檔」頁備份</span>'}${S.buff>0?'<span>玉璽燒加成中</span>':''}${S.spice>0?`<span>迷迭香 ${S.spice}</span>`:''}${S.fear>0?`<span>雙腿發軟 ${S.fear}</span>`:''}${S.hyp?`<span class="lack">缺氧：體力上限 ${maxE()}</span>`:''}${S.poison>0?`<span class="lack">中毒 ${S.poison}</span>`:''}${S.frac?'<span class="lack">骨裂</span>':''}${S.loc==='realm'?`<span>${mtIn()?(S.rain>0?'⚠ 危險度：凶險（降雨）':'⚠ 危險度：侵蝕'):ghostOn()?'亡魂徘徊・今夜安全':isNight()?'⚠ 危險度：侵蝕':'危險度：微弱'}</span>`:''}${(S.loc==='realm'&&reg25()&&!S.shen)?'<span>⚑ 回人界，有人在等你</span>':''}</div>`}
+let xtxt='',itxt='',arm='';
+const ask=(k,f)=>{if(arm===k){arm='';f()}else{arm=k;R()}};
+const slotInfo=n=>{try{const x=localStorage.getItem('daqian_slot'+n);return x?JSON.parse(x).m:null}catch(e){return null}};
+function applySave(o){if(!o||typeof o!=='object'||typeof o.coins!=='number'||!o.dex||!o.inv)throw new Error('bad');
+ S=Object.assign(fresh(),o);if(o.intro===undefined){S.intro=1;S.aji=1}S.pend=null;S.chat=null;S.cut=null;tug=null;tugRes=null;clearInterval(tugD);clearTimeout(tugT);arm=''}
+function slotSave(n){try{const m={t:Date.now(),lv:lvl(),dex:D.filter(d=>S.dex[d[0]]).length,coins:S.coins};localStorage.setItem('daqian_slot'+n,JSON.stringify({m,s:S}));log(`已存入存檔欄位 ${n}，完成。`)}catch(e){log('無法寫入瀏覽器儲存空間，請改用下方的存檔代碼備份。')}R()}
+function slotLoad(n){try{applySave(JSON.parse(localStorage.getItem('daqian_slot'+n)).s);log(`已讀取存檔欄位 ${n}，完成。`)}catch(e){log('讀取失敗，這個欄位的資料無法使用。')}R()}
+function slotDel(n){try{localStorage.removeItem('daqian_slot'+n)}catch(e){}R()}
+function exportCode(){xtxt='DQSJ1:'+btoa(unescape(encodeURIComponent(JSON.stringify(S))));R();const t=$('#xcode');if(t)t.select()}
+function copyCode(){if(!xtxt)exportCode();const t=$('#xcode');t.select();
+ (navigator.clipboard?navigator.clipboard.writeText(xtxt):Promise.reject()).then(()=>{log('存檔代碼已複製，完成。');R()},()=>{log('無法自動複製，請長按存檔代碼框，手動全選並複製。');R()})}
+function importCode(){try{let c=itxt.trim();if(c.startsWith('DQSJ1:'))c=c.slice(6);applySave(JSON.parse(decodeURIComponent(escape(atob(c)))));itxt='';tab='act';log('匯入完成：已載入存檔。')}catch(e){log('存檔代碼無法讀取，請確認有完整複製。')}R()}
+function saveTab(){const when=t=>new Date(t).toLocaleString('zh-TW',{hour12:false,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+ return `<div class="card"><h2>存檔</h2><p class="sub">每次操作後，遊戲都會自動存檔在這個瀏覽器裡。換瀏覽器、換裝置、清除網站資料，或在無痕模式下玩，進度都不會跟著走。重要進度請另外備份。</p>
+ <p class="sub" style="margin:0 0 6px">遊戲版本：${VER}</p><p style="margin:0 0 8px">${B(S.mute?'音效：關':'音效：開',"S.mute=!S.mute;R()")}</p>${LSOK?`<p style="margin:0">自動存檔正常。最近一次：${when(lastSave)}</p>`:'<p class="lack" style="margin:0"><b>這個瀏覽器目前無法保存進度。</b>可能是無痕模式，或在 LINE、Messenger 等 App 內建的瀏覽器開啟。請改用手機或電腦的系統瀏覽器，並定期用下方的存檔代碼備份。</p>'}</div>
+ <div class="card"><h3>手動存檔欄位</h3><p class="sub">最多 3 個欄位，可存不同時間的進度。</p><div class="list">${[1,2,3].map(n=>{const m=slotInfo(n);
+  return `<div class="item"><span><b>欄位 ${n}</b><br><span class="mute">${m?`${when(m.t)}・Lv.${m.lv}・圖鑑 ${m.dex}/26・界幣 ${m.coins}`:'空的'}</span></span><span class="acts">${B('存入',`ask('save${n}',()=>slotSave(${n}))`,{c:arm==='save'+n?'warn':'',d:false}).replace('>存入<',`>${arm==='save'+n&&m?'再按確認覆蓋':'存入'}<`)}${m?B(arm==='load'+n?'再按確認讀取':'讀取',`ask('load${n}',()=>slotLoad(${n}))`,{c:arm==='load'+n?'warn':''})+B('刪除',`slotDel(${n})`):''}</span></div>`}).join('')}</div></div>
+ <div class="card"><h3>存檔代碼</h3><p class="sub">把目前進度變成一段文字，貼到備忘錄或傳給自己保存。要換裝置或救回進度時，貼回下方匯入即可。</p>
+ <textarea id="xcode" class="ta" readonly placeholder="按「產生存檔代碼」">${xtxt}</textarea><div class="grid" style="margin:8px 0 14px">${B('產生存檔代碼','exportCode()')}${B('複製代碼','copyCode()')}</div>
+ <p class="sub" style="margin:0 0 4px">匯入存檔（會取代目前進度）</p><textarea id="icode" class="ta" oninput="itxt=this.value" placeholder="把存檔代碼貼在這裡">${itxt}</textarea><div class="grid" style="margin-top:8px">${B(arm==='imp'?'再按一次確認匯入':'匯入存檔',`ask('imp',()=>importCode())`,{c:arm==='imp'?'warn':'',d:!itxt.trim()})}</div></div>`}
+addEventListener('pagehide',()=>save());document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+function stashCard(){const ids=Object.keys(S.stash);if(S.loc!=='home'||!ids.length)return '';
+ return `<div class="card"><h3>儲物櫃（人界）</h3><p class="sub">背包放不下的東西會自動存到這裡，也可以在探索者小屋整理。</p><div class="list">${ids.map(id=>`<div class="item"><span>${rn(id)} ×${S.stash[id]}</span><span class="acts">${(I[id].eat||I[id].spice||I[id].cure||I[id].o2||I[id].anti||I[id].anes)?B('使用',`eat('${id}')`):''}</span></div>`).join('')}</div></div>`}
+function pack(){return pack0()+stashCard()}
+function pack0(){const ids=Object.keys(S.inv);
+ return `<div class="card"><h2>背包 ${used(S.inv)}/${cap()} 格</h2><p class="sub">每格可疊 10 個。升級每級 +1 格（Lv.1 為 20 格，Lv.5 為 24 格）。${S.loc==='realm'?'<b>在異界死亡，這裡的東西會全部消失。</b>':''}</p>${ids.length?'<div class="list">'+ids.map(id=>`<div class="item"><span>${rn(id)} ×${S.inv[id]} <span class="tag">${I[id].cat}</span></span><span class="acts">${(I[id].eat||I[id].spice||I[id].cure||I[id].o2||I[id].anti||I[id].anes)?B('使用',`eat('${id}')`):''}</span></div>`).join('')+'</div>':'<p class="sub">空的。</p>'}</div>
+ ${S.boxOn?`<div class="card"><h3>旅行箱（安全）${used(S.box)}/5</h3><p class="sub">放在這裡的東西死亡也不會掉落，在異界也能直接使用或取出到背包。${S.loc==='home'?'放入請到探索者小屋。':''}</p>${Object.keys(S.box).length?'<div class="list">'+Object.keys(S.box).map(id=>`<div class="item"><span>${rn(id)} ×${S.box[id]}</span><span class="acts">${(I[id].eat||I[id].spice||I[id].cure||I[id].o2||I[id].anti||I[id].anes)?B('使用',`eat('${id}')`):''}${B('取出到背包',`mv2('box','inv','${id}')`)}</span></div>`).join('')+'</div>':'<p class="sub">空的。</p>'}</div>`:''}`}
+let dexR='全部',dexS=false,dexRm='mu';
+const RO=['常見','稀少','珍奇','瑰寶','幻奇','神隱','平平','怡人','驚駭','絕美'];
+const DET={
+echo:['牧野大草原','全天','在草原採集','可做營養品；可種植於森羅殿；神木草質龍的主食'],
+yuxi:['萬象森林（日裳樹的樹蔭下）','全天','在森林採集','玉璽燒的原料；可種植於森羅殿'],
+lily:['牧野大草原','破曉 05:00–07:00','天剛亮時在草原採摘','適合觀賞；微毒不可食用；可種植於森羅殿'],
+sun:['萬象森林','全天','在森林觀察','無法放入背包'],
+c100:['牧野大草原','全天','在草原搜尋，或跟蹤迷迭兔','食用回復 40 體力；可種植於森羅殿'],
+c10k:['牧野大草原','全天（極稀少）','在草原尋找','食用回復 100 體力；可種植（成功率 60%）'],
+frog:['碧玉湖岸','全天','在湖邊捕捉','掉落「湖蛙黏液」，可賣 50 界幣'],
+trout:['碧玉湖','早上 06:00–11:00','需要釣竿，在湖邊垂釣','可放入芸生園；可做牧野風味魚肉拼盤；早上釣起時有機會見到「鱒魚躍龍門」'],
+bream:['碧玉湖下游','全天','需要釣竿，在湖邊垂釣','可放入芸生園；可做牧野風味魚肉拼盤'],
+weaver:['日裳樹與草原','全天','在草原觀察鳥群','只能觀察，無法帶走'],
+eagle:['牧野大草原上空','白天','白天在草原狩獵','深受獵人歡迎'],
+owl:['牧野大草原與森林','夜晚','夜晚在草原狩獵','羽毛可做高級飾品'],
+heron:['碧玉湖岸','全天','在湖邊觀察，或垂釣時被牠搶魚','只能觀察，無法帶走'],
+rat:['牧野大草原','全天','在草原捕捉','可烤成牧野烤鼠；可作為短刀的材料'],
+rabbit:['牧野大草原','全天','在草原跟蹤','跟蹤時可能找到百年苜蓿或排泄物（可調製迷迭香味料）'],
+cat:['除碧玉湖外全界皆有（遊戲中於大草原狩獵）','夜晚機率較高','在草原狩獵','獵人極看好的夥伴'],
+wolf:['綠林道、萬象森林','全天','在綠林道或森林狩獵；回家時也可能被牠們圍堵','石英輕甲與利刃短刀的材料；皮毛可保暖'],
+squirrel:['萬象森林','夜晚','夜晚在森林追蹤','極為稀少，逃脫率高達 70%'],
+wave:['牧野大草原','大風時','採集回聲草時有機會見到','現象不能帶走'],
+leap:['碧玉湖','早上','早上釣起艷陽鱒的瞬間','現象不能帶走'],
+smoke:['綠林道','返回人界時','準備啟動傳送門時被狼群圍堵','現象不能帶走'],
+quartz:['綠林道','全天','在綠林道採集','石英輕甲與短刀的材料'],
+lantern:['萬象森林深處','夜晚較容易','在森林深處尋找','可交給雷恩加工成高級檯燈'],
+star:['全界域','只在夜晚','流星劃過夜空後，到墜落地點採集','可製造跨次元神兵；黑市天價；墜落時約 60% 引來森林狼，需野獸誘餌或硬闖'],
+dragon:['牧野大草原的巢穴','全天','在草原尋找巢穴','可偷龍蛋帶回販售；偷蛋被發現會非常危險'],
+lion:['牧野大草原','深夜','夜晚在草原靜候幽光','只能遠觀，無法捕捉；偶爾會發出吼叫'],
+oxy:['峽之間','全天','在峽之間採集','三顆可製成一瓶氧氣瓶'],
+osseo:['峽之間','全天','在峽之間岩壁採集','可製成加固裝甲的外骨骼'],
+obsid:['嶽嵒峭上層岩壁','全天（極稀少）','需攀岩鉤，攀上上層岩壁開採','鍛造黑曜石刀的材料'],
+iron:['嶽嵒峭下層岩壁','全天','在嶽嵒峭開採','適合做攀爬鐵鉤'],
+sapph:['泉流洞深處','全天（極稀少）','在泉流洞採集','開採困難'],
+jade:['玄脈山頂峰','全天（極極稀少）','在山頂開採','傳說中的寶石'],
+drought:['山界全境','全天','在峽之間與大怒坡採集','全株含劇毒；適應力極強'],
+maoc:['嶽嵒峭','全天','在嶽嵒峭採集','攀岩鉤的材料'],
+juniper:['玄脈山頂峰','全天（稀少）','在山頂採集','園藝植物；採集環境惡劣'],
+goat:['山界全境（除泉流洞）','全天','在峽之間、大怒坡、嶽嵒峭狩獵','掉落物羊角可販售'],
+dagger:['嶽嵒峭','全天','在嶽嵒峭狩獵','擅長伏擊'],
+bat:['泉流洞','全天','在泉流洞狩獵','非常難對付'],
+vulture:['峽之間上空','全天','在峽之間狩獵；體力低於 20 時會被牠襲擊','獸骨手鐲（亡靈）能降低被襲擊的機率'],
+swallow:['嶽嵒峭','全天','在嶽嵒峭採集排泄物（無法捕捉）','排泄物可製成除雜草的農藥'],
+falcon:['嶽嵒峭絕壁','全天','在嶽嵒峭狩獵','極難接近'],
+silk:['玄脈山頂峰','全天','在山頂狩獵','稀有的觀賞鳥類'],
+locust:['峽之間（旱魃草叢）','全天','在峽之間捕捉','自身帶毒'],
+centi:['泉流洞','全天','在泉流洞捕捉','會發光'],
+nail:['玄脈山頂峰','全天','在山頂採集','絲綢鳥的食物'],
+croc:['峽之間泥潭','全天；下雨天更活躍','探查泥潭，或直接狩獵（九死一生）','極度危險'],
+skink:['嶽嵒峭','全天','在嶽嵒峭挖掘捕捉','匕首山貓的食物'],
+gecko:['泉流洞','全天（極稀少）','在泉流洞狩獵','數量稀少'],
+ecroc:['峽之間','探查泥潭時','探查泥潭，遇到旱災擬岩鱷時成功閃避','現象不能帶走'],
+erock:['大怒坡','攀登途中','攀往嶽嵒峭時被落石擊中','現象不能帶走'],
+efog:['嶽嵒峭與頂峰交界','攀往頂峰時','攀爬通往玄脈山頂峰的道路','現象不能帶走'],
+ewind:['玄脈山頂峰','山頂行動時','在山頂活動時遇到強風','現象不能帶走'],
+equake:['山界全境','隨機','在山界活動時隨機發生','地震期間大怒坡落石更多，泉流洞深潭更容易見到大鯢'],
+erain:['山界全境','久久才下一次','在山界活動時隨機降雨','現象不能帶走；下雨時危險度升至「凶險」'],
+sal:['泉流洞深潭','全天（神隱）','潛入泉流洞深潭，地震後更容易遇見','掉落物大鯢黏液可做植物營養液']};
+function dexDetail(id){const d=DM[id],o=$('#over');
+ if(!S.dex[id]){notice('？？？','你還沒有遇見這個物種。到異界探索看看吧。');return}
+ const x=DET[id]||[],no=String(DR(rl(d)).findIndex(e=>e[0]===id)+1).padStart(2,'0');
+ o.hidden=false;o.innerHTML=`<div class="card sheet dtl"><span class="no">No.${no}</span><h2 class="r-${RC[d.r]}">${d.n}</h2><p class="sub">${d.cat}・${d.r}${d.p?'・約 '+d.p+' 界幣':''}・登錄 +${d.exp} EXP</p><p>${d.desc}</p>
+ <dl>${x[0]?`<dt>出沒地區</dt><dd>${x[0]}</dd><dt>出沒時間</dt><dd>${x[1]}</dd><dt>取得方式</dt><dd>${x[2]}</dd><dt>用途與備註</dt><dd>${x[3]}</dd>`:''}</dl>
+ <button class="btn pri" onclick="$('#over').hidden=true">關閉</button></div>`}
+function realmIntro(){if(!(S.visited||Object.keys(S.dex).length))return '<div class="card"><h2>？？？</h2><p class="sub">你還沒有去過任何界域。</p></div>';
+ if(dexRm==='mt')return mtIntro();
+ return `<div class="card"><h2>牧野界</h2><p class="sub">危險度：微弱（白天）／ 侵蝕（夜晚）</p><p style="margin:0 0 8px">由無窮盡的草地組成的平原。在深草叢中奔跑會微幅增加體力消耗（+10%）。這裡有日夜交替：白天溫和，入夜後凝聚冰涼夜露，萬象密林鴞出沒，危險度上升。</p>
+ <dl class="rd"><dt>界中地區</dt><dd>綠林道（進入界內的初始地，傳送門所在）、牧野大草原、碧玉湖、萬象森林</dd><dt>門口事件</dt><dd>準備返回綠林道啟動傳送門時，有機率被萬象森林狼圍堵。若在門口被打死，物資會全數遺失，只有圖鑑資料能回到人界。</dd></dl></div>`}
+function codex(){const av=[S.muSeen&&'mu',S.mtSeen&&'mt'].filter(Boolean);if(!av.length)return `<div class="card"><h2>圖鑑</h2><p class="sub">這裡還是一片空白。去過的界域，會在這裡留下痕跡。</p></div>`;if(!av.includes(dexRm)){dexRm=av[0];dexF='全部';dexR='全部'}
+ const cats=dexRm==='mt'?['全部','植物','兩棲','鳥類','獸類','節肢','爬蟲','現象','礦物']:['全部','植物','兩棲','魚類','鳥類','獸類','鬼怪','現象','礦物','龍獸'];
+ const vis=DR(dexRm).filter(d=>d[0]!=='lion'||S.lionOpen||S.dex.lion);
+ const base=vis.filter(d=>dexF==='全部'||d[2].includes(dexF));
+ let list=base.filter(d=>dexR==='全部'||(S.dex[d[0]]&&d[3]===dexR));
+ if(dexS)list=[...list].sort((a,b)=>(S.dex[a[0]]?RO.indexOf(a[3]):99)-(S.dex[b[0]]?RO.indexOf(b[3]):99));
+ const rcnt=r=>base.filter(d=>d[3]===r&&S.dex[d[0]]).length;
+ const rs=RO.filter(r=>base.some(d=>d[3]===r&&S.dex[d[0]]));
+ return (av.length>1?`<div class="chips" style="margin:0 0 8px">${B('牧野界',"dexRm='mu';dexF='全部';dexR='全部';R()",{c:dexRm==='mu'?'on':''})}${B('山界',"dexRm='mt';dexF='全部';dexR='全部';R()",{c:dexRm==='mt'?'on':''})}</div>`:'')+realmIntro()+`<div class="card"><h2>${dexRm==='mt'?'山界':'牧野界'}圖鑑</h2><p class="sub">已登錄 ${DR(dexRm).filter(d=>S.dex[d[0]]).length}/${DR(dexRm).length}。${dexRm==='mu'?'第 26 格為隱藏物種。':''}解鎖後獲得 EXP。</p>
+ <p class="sub" style="margin:0 0 4px">分類</p><div class="chips" style="margin:0 0 8px">${cats.map(c=>B(c,`dexF='${c}';dexR='全部';R()`,{c:c===dexF?'on':''})).join('')}</div>
+ <p class="sub" style="margin:0 0 4px">稀有度（現象為衝擊分級）。只列出你已登錄過的稀有度，後面是已登錄數量；未登錄物種的稀有度保密</p><div class="chips" style="margin:0 0 8px">${B('全部',`dexR='全部';R()`,{c:dexR==='全部'?'on':''})}${rs.map(r=>B(`${r} ${rcnt(r)}`,`dexR='${r}';R()`,{c:r===dexR?'on':''})).join('')}${B(dexS?'✔ 依稀有度排序':'依稀有度排序',`dexS=!dexS;R()`,{c:dexS?'on':''})}</div>
+ <p class="sub" style="margin:0">符合條件：${list.length} 筆</p></div>
+ ${list.length?'':'<p class="sub">沒有符合的物種。</p>'}<div class="dex">${list.map(d=>{const u=S.dex[d[0]];return `<button class="dc ${u?'':'lock'}" onclick="dexDetail('${d[0]}')"><span class="no">No.${String(DR(dexRm).indexOf(d)+1).padStart(2,'0')}</span><b class="${u?'r-'+RC[d[3]]:''}">${u?d[1]:'？？？'}</b> <span class="tag">${u?d[2]:'未登錄'}</span><div class="dp">${u?`${d[3]}${d[5]?'・'+d[5]+' 界幣':''}・+${d[4]} EXP<br>點擊查看詳情`:'尚未遇見。'}</div></button>`}).join('')}</div>`}
+const rules=()=>`<div class="card"><h2>1.0 版規則與修正</h2><ul class="rules">
+<li><b>背包</b>：初始 20 格，最高等級 5，每升 1 級 +1 格，Lv.5 為 24 格。每格可疊 10 個。</li>
+<li><b>等級</b>：累計 EXP 100 / 350 / 900 / 1800 升到 Lv.2 / 3 / 4 / 5。原文件沒有給門檻，這裡補上。</li>
+<li><b>死亡</b>：圖鑑與 EXP 保留；背包內所有物品全部消失（含人界帶去的）。裝備欄的釣竿、護甲、短刀與先驅者指針不屬於背包，不會掉落。旅行箱內容保留。在傳送門被狼群殺死也是同樣規則。</li>
+<li><b>人界不會掉東西</b>：新增儲物櫃，讓玩家出發前能把貴重物品留在家。</li>
+<li><b>小黑屋</b>：死亡時界幣少於 50 且沒有界石才會被關（原文「負債」在本版不會出現，因為不能賒帳）。禁閉縮短為 60 秒，出來領 200 界幣。另有救濟金避免卡死。</li>
+<li><b>森羅殿</b>：原文寫「牧野界 100%」但第 26 格需要緣貔回歸才會出現，互相矛盾。本版改為登錄 25 種常規圖鑑後落成，第 26 格是額外隱藏彩蛋。</li>
+<li><b>傳送</b>：目前只有牧野界，隨機共鳴固定前往牧野。星圖擴散、新界域、龍蛋孵化坐騎留待 2.0。</li>
+<li><b>獅亡魂</b>：登錄後仍可在夜間草原重複遇見。遇見超過 10 次後，有機會被牠帶到萬象森林深處取得遺骸（一次性），可在鍛造鋪製作「獸骨手鐲（亡靈）」。取得遺骸後，每個夜晚（在異界時）有 30% 機率觸發「亡魂徘徊」：獅亡魂在牧野界遊蕩，當晚不會遭到夜襲，傳送門前也不會有狼群，隕星也不會引來狼群。</li>
+<li><b>天外星體</b>：只在夜間出現。每次移動到新地點約有 0.8% 機率流星墜落在該區域，並有保底：沒出現時機率會慢慢累積（最多再加 5%），出現後歸零，之後到那裡就能採集。回人界或死亡後流星消失。隕星墜落時約 60% 機率引來森林狼（狼煙四起），採集前要用野獸誘餌引開，或硬闖開採。</li>
+<li><b>無價物品</b>：日裳樹、織布鳥、盜賊鷺、現象與龍獸本體只能登錄圖鑑，不能放進背包。</li>
+<li><b>山界</b>：初始界域之一。隨機共鳴有 50% 機率傳送過去，去過後可定向傳送 600 界幣。山界沒有夜晚，向上攀爬體力消耗加倍；嶽嵒峭以上會缺氧，體力上限逐步下降；大怒坡落石需躲避。山界圖鑑獨立計算，不影響牧野界 25 格的劇情條件。</li>
+<li><b>裝備</b>：擁有的裝備可在探索者小屋選擇裝備或卸下，也能全部卸下空手出發。同類型（武器、護甲、頭飾、手飾、釣具、攀登工具）只能裝備一件。</li>
+<li><b>收購</b>：賈布斯收獸類、鳥類、礦物、素材；花嬸收魚類與植物；緣貔以 1.2 倍收購瑰寶以上。</li>
+</ul></div><div class="card"><h3>存檔</h3><p class="sub">進度存在這個瀏覽器裡。目前版本：${VER}</p><button class="btn warn" id="rs" onclick="if(this.dataset.s){S=fresh();save();tab='act';R()}else{this.dataset.s=1;this.textContent='再按一次確認清除所有進度'}">重新開始</button></div>`;
+function R(){migGear();if(S.jail&&S.jail<=Date.now()){S.jail=0;S.coins+=200;log('你被放出小黑屋，領到 200 界幣。')}save();document.body.classList.toggle('night',S.loc==='realm'&&isNight());document.body.classList.toggle('fog',S.loc==='realm'&&S.pend==='qte');{const fv=document.getElementById('fogveil');if(fv&&S.pend!=='qte')fv.remove()}{const q=mtIn()&&S.quake>0;document.body.classList.toggle('quake',q);if(q)document.body.style.setProperty('--qa',(S.quake*2+1)+'px')}document.body.classList.toggle('mt',mtIn()&&S.place!=='cave');document.body.classList.toggle('cave',mtIn()&&S.place==='cave');$('#hud').innerHTML=hud();
+ $('#nav').innerHTML=[['act','🧭 行動'],['pack','🎒 背包'],['dex','📖 圖鑑'],['save','💾 存檔'],['rules','📋 規則']].map(x=>`<button class="${tab===x[0]?'on':''}" onclick="tab='${x[0]}';R()">${x[1]}</button>`).join('');
+ let h=tab==='act'?view()+`<div class="card"><h3>探險筆記</h3><div class="log">${S.logs.slice(0,8).map(l=>`<p>${l}</p>`).join('')}</div></div>`:tab==='pack'?pack():tab==='dex'?codex():tab==='save'?saveTab():rules();
+ $('#main').innerHTML=h;if(S.loc==='home'&&S.intro&&S.aji&&!(S.jail>Date.now())&&reg25()&&!S.shen&&!S.cut&&$('#over').hidden)S.cut={i:0};const cu=$('#cut');if(!S.intro){cu.hidden=false;cu.innerHTML=titleCard()}else if(!S.aji){cu.hidden=false;cu.innerHTML=ajiCard()}else if(S.cut){cu.hidden=false;cu.innerHTML=cutCard()}else cu.hidden=true;flush();if(S.loc==='realm'&&['rockintro','rock','mtres','wind','croc','qte','bat'].includes(S.pend))requestAnimationFrame(()=>{const a=$('#main .alert');a&&a.scrollIntoView({block:'center'})});if(S.flash)meteorFx();if(S.ghostFx)ghostFx();S.flash=0;S.ghostFx=0}
+const Q=[];
+const AT={grass:['牧野禾斑貓','萬象密林鴞'],forest:['萬象森林狼','萬象密林鴞'],gate:['萬象森林狼'],lake:['碧玉盜賊鷺']};
+function hitFlash(){document.body.classList.add('hit');const m=$('#main');m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake');setTimeout(()=>document.body.classList.remove('hit'),700)}
+function notice(t,m){const o=$('#over');o.hidden=false;o.innerHTML=`<div class="card sheet"><h2>${t}</h2><p>${m}</p><button class="btn pri" onclick="$('#over').hidden=true">知道了</button></div>`}
+const CUT=[['n','你踏出傳送門，人界中轉站的傳送陣泛著前所未有的光。'],['n','陣前站著一個背著舊布包的身影，風塵僕僕，眼裡卻帶著笑。'],['緣貔','……終於有人把牧野界的 25 格圖鑑，一格一格填滿了。'],['緣貔','我叫緣貔，是第一個走進牧野界的探險者。後來一頭栽進去，好多年沒回來過。'],['緣貔','你登錄的每一種生物、每一個現象，都是我當年沒走完的路。我想，是時候回家了。'],['緣貔','我在城邊留了一塊靈土。我要在那裡蓋一座農場，把牧野的植物種回人界，就叫它「森羅殿」。'],['緣貔','以後想聊牧野、想種東西，都來找我。貴重的瑰寶，我還會用高一點的價錢收。'],['banner']];
+function titleCard(){return `<div class="card sheet title"><div class="tsub">探索者的手札</div><h1>大千世界</h1><div class="tline"></div><p class="tdesc">一扇門，通往無數個世界。<br>你的第一頁，從這裡寫起。</p>${B('下一步',"startGame()",{c:'pri'})}<div class="tver">${VER}</div></div>`}
+function startGame(){S.intro=1;S.ajiI=0;if(!cnt('stone'))add('stone',1);log('你從人界出發前，領到了一顆界石。');R()}
+const AJI=['喲，新面孔。別一臉緊張，這裡的規矩不多，但每一條都有人付過學費。','我是阿吉。這塊板子上每天都會貼新的懸賞，缺什麼貨、要什麼東西，寫得清清楚楚。你拿得出來，我就給你錢。','口袋裡那顆界石，算我送你的見面禮。別隨手亂丟。沒了它，人在外頭可就回不來了。','身上也別空著。界石加上一點零錢，是探險者出門的體面。窮到兩手空空又出了事……我見過，被關了好一陣子。','出門前先把肚子填飽。花嬸那邊吃得飽，也收魚收菜。賈布斯愛收獸骨跟礦石，撿到什麼別囤著發霉。','天黑以後，外頭的東西可就沒那麼客氣了。想夜裡行動，口袋裡最好有點能引開野獸的玩意兒。','累了就回小屋睡一覺，放不下的東西也能擱那兒。墨老那兒記著你見過的一切，記得多了，他自然會有表示。','好了，我囉嗦夠了。剩下的，自己去闖。要是忘了什麼，回來找我聊兩句就是。'];
+function ajiCard(){const i=S.ajiI||0,last=i>=AJI.length-1;return `<div class="card sheet" style="text-align:left"><h2>公告欄委託所・阿吉</h2><div class="dlg"><div class="av">吉</div><div class="bub"><b>阿吉</b><p>${AJI[i]}</p></div></div><div class="grid">${last?B('我知道了',"S.aji=1;S.ajiI=0;S.view='board';R()",{c:'pri'}):B('下一句',"S.ajiI=(S.ajiI||0)+1;R()",{c:'pri',s:`${i+1}/${AJI.length}`})}</div></div>`}
+function cutCard(){const l=CUT[S.cut.i];
+ if(l[0]==='banner')return `<div class="card sheet"><h2>森羅殿 正式開放</h2><p>大前輩緣貔回歸人界，森羅殿落成。你可以在那裡種植、與緣貔交談，並以 1.2 倍價格出售瑰寶。</p><div class="grid">${B('前往森羅殿',"endCut(1)",{c:'pri'})}${B('稍後再去',"endCut(0)")}</div></div>`;
+ const n=l[0]==='n';
+ return `<div class="card sheet" style="text-align:left"><div class="dlg">${n?'':'<div class="av">緣</div>'}<div class="bub"><b>${n?'旁白':'緣貔'}</b><p>${l[1]}</p></div></div><div class="grid">${B('下一句',"S.cut.i++;R()",{c:'pri',s:`${S.cut.i+1}/${CUT.length-1}`})}${B('略過',"S.cut.i=CUT.length-1;R()")}</div></div>`}
+function endCut(go){S.shen=true;S.cut=null;S.view=go?'shen':'town';log('🏡 緣貔回歸人界，森羅殿正式開放！');R()}
+function sfx(kind){try{if(S.mute)return;const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const c=sfx.c||(sfx.c=new A());if(c.state==='suspended')c.resume();const t=c.currentTime;
+ const tone=(f0,f1,t0,d,v,type)=>{const o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f0,t+t0);if(f1)o.frequency.exponentialRampToValueAtTime(f1,t+t0+d);g.gain.setValueAtTime(.0001,t+t0);g.gain.exponentialRampToValueAtTime(v,t+t0+Math.min(.25,d/3));g.gain.exponentialRampToValueAtTime(.0001,t+t0+d);o.connect(g);g.connect(c.destination);o.start(t+t0);o.stop(t+t0+d+.05)};
+ if(kind==='meteor'){tone(2200,160,.5,1.6,.05,'triangle');[1046,1318,1568].forEach((f,i)=>tone(f,0,2.1+i*.16,1.2,.05))}
+ if(kind==='ghost'){[196,247,294].forEach((f,i)=>tone(f,0,i*.5,2.4,.04))}
+ if(kind==='squeak'){[0,.12,.24].forEach(d=>tone(3400,2300,d,.07,.05,'square'))}
+ if(kind==='warn'){[880,660,880,660].forEach((f,i)=>tone(f,0,i*.16,.15,.07,'square'))}
+ if(kind==='thud'){tone(120,35,0,.5,.22,'sawtooth');tone(70,28,.02,.7,.25)}
+ if(kind==='star'){[784,988,1318,1568].forEach((f,i)=>tone(f,0,i*.1,1,.05))}}catch(e){}}
+function showFx(html,ms){const f=$('#fx');if(!f)return;f.hidden=false;f.innerHTML=html;clearTimeout(showFx.t);showFx.t=setTimeout(()=>{f.hidden=true;f.innerHTML=''},ms)}
+function ghostFx(){const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ showFx(`<div class="dim ghostdim"></div>${rm?'':'<i class="gh"></i>'}<div class="mtxt gh2"><b>亡魂徘徊</b><span>牧野草原獅的亡魂，正在牧野界各處遊蕩</span><em class="calm">今夜沒有任何掠食者敢靠近</em></div>`,rm?2800:5600);sfx('ghost')}
+function meteorFx(){const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ showFx(`<div class="dim"></div>${rm?'':'<i class="mt m1"></i><i class="mt m2"></i><i class="mt m3"></i><i class="mt big"></i><i class="boom"></i>'}<div class="mtxt"><b>流星墜落</b><span>夜空裂開一道光，墜向了${AREAS[S.place]}附近</span>${S.starWolf?'<em>光芒吸引了森林狼的注意</em>':''}</div>`,rm?2800:5200);sfx('meteor')}
+function starFx(){const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ showFx(`<div class="dim short"></div>${rm?'':[...Array(16)].map((_,i)=>`<i class="sp" style="--a:${i*22.5}deg"></i>`).join('')}<div class="mtxt gain"><b>天外星體入手</b><span>帶著餘溫的隕星，靜靜躺在你的掌心</span></div>`,rm?2400:3400);sfx('star')}
+function collectStar(c){if(c&&!spend(c)){R();return}unlock('star');add('star');S.meteor=null;S.starWolf=0;log('✨ 你找到了天外墜落的隕星，帶著餘溫的星體入手！');R();starFx()}
+function starBait(){if(!take('bait')){R();return}S.starWolf=0;S.pend=null;log('你拋出野獸誘餌，狼群被引開了。');collectStar(10)}
+function starRush(){if(!spend(25)){R();return}S.pend=null;
+ if(ch(.6+(S.gear.armor?.2:0)+bladeS())){S.starWolf=0;log('你頂著狼群的撕咬，硬是撲向了隕星！');collectStar(0)}else{die('你在隕星旁被狼群撕碎，物資爆落滿地。');R()}}
+function wolfWarn(){return (S.starWolf&&S.meteor===S.place&&!S.pend)?'<div class="card alert"><b class="red">光芒吸引了森林狼的注意</b><br><span class="mute">採集隕星前需要野獸誘餌把狼群引開，或直接硬闖開採。</span></div>':''}
+function nightBar(){if(!isNight())return '';
+ if(ghostOn())return `<div class="card nightbar ghostbar"><b>☾ 夜晚・亡魂徘徊</b><br><span class="mute">牧野草原獅的亡魂正在牧野界遊蕩。今夜沒有任何掠食者敢靠近：不會遭到夜襲，傳送門前也不會有狼群。主動狩獵失敗或偷龍蛋仍然有風險。</span></div>`;const p=S.gear.bracelet?4:12;
+ return `<div class="card nightbar"><b>☾ 夜晚・危險度：侵蝕</b><br><span class="mute">每次行動有 ${p}% 機率遭到掠食者襲擊${S.gear.bracelet?'（獸骨手鐲鎮攝中）':''}。標有 ☾ 的是夜間限定行動；天亮（06:00）後危險度回到微弱。</span></div>`}
+function toast(m){let k='',t=m;
+ if(m.startsWith('📖')){k='dex';t=m.replace('📖 圖鑑解鎖','新登錄')}
+ else if(m.startsWith('⭐'))k='lv';
+ else if(m.startsWith('⚔')){k='hit';hitFlash()}
+ else if(m.startsWith('💀')){showOver(m);return}
+ else if(m.startsWith('🌙'))k='night';
+ else if(/^(✨|🏡|🧳|🧭|🥚|🐺|🦕|👻|🌅)/.test(m))k='sp';
+ else if(/不足|你沒有|放不下|已滿|無法/.test(m))k='warn';
+ else if(/獲得|賣出|購買|採集到|捕獲|抓到|找到|撿到|釣到|收成|完成|取得|領到/.test(m))k='gain';
+ else return;
+ const box=$('#toasts'),el=document.createElement('div');el.className='toast '+k;el.textContent=t;box.appendChild(el);
+ while(box.children.length>3)box.firstChild.remove();
+ setTimeout(()=>el.classList.add('out'),k==='lv'||k==='sp'||k==='hit'||k==='night'?5200:2800);setTimeout(()=>el.remove(),6000)}
+function flush(){while(Q.length)toast(Q.shift())}
+function showOver(m){const o=$('#over');o.hidden=false;o.innerHTML=`<div class="card sheet"><h2>探索失敗</h2><p>${m.replace('💀 ','')}</p><button class="btn pri" onclick="$('#over').hidden=true;R()">回到小屋</button></div>`}
+let lastPl=null;
+function ambient(day,dusk,pl){let back='',front='';
+ if(mtIn()){
+  back=[[20,22,1.2],[130,34,.9],[220,18,1.1]].map((c,i)=>`<g class="cld" style="animation-duration:${50+i*17}s;animation-delay:-${i*19}s"><ellipse cx="${c[0]}" cy="${c[1]}" rx="${16*c[2]}" ry="${4*c[2]}" fill="#fff" opacity=".55"/><ellipse cx="${c[0]+9}" cy="${c[1]-2}" rx="${10*c[2]}" ry="${3.5*c[2]}" fill="#fff" opacity=".6"/></g>`).join('');
+  front=Array.from({length:14},(_,i)=>`<circle class="dust" cx="${(i*23+7)%300}" cy="${(i*37)%110}" r="${.7+(i%3)*.35}" fill="#f4efe4" opacity=".7" style="animation-duration:${6+i%5*2}s;animation-delay:-${i*.9}s"/>`).join('');
+  if(pl==='cave'||pl==='gorge')front='';
+ }else if(day){
+  back=[[30,20],[150,32],[240,16]].map((c,i)=>`<g class="cld" style="animation-duration:${60+i*20}s;animation-delay:-${i*23}s"><ellipse cx="${c[0]}" cy="${c[1]}" rx="15" ry="4" fill="#fff" opacity=".7"/><ellipse cx="${c[0]+8}" cy="${c[1]-2}" rx="9" ry="3.5" fill="#fff" opacity=".75"/></g>`).join('');
+  front=`<g class="bird" style="animation-delay:-4s"><path d="M0 0q3-3 6 0q3-3 6 0" fill="none" stroke="#3a4650" stroke-width=".9"/></g><g class="bird b2"><path d="M0 0q3-3 6 0q3-3 6 0" fill="none" stroke="#3a4650" stroke-width=".9"/></g>`;
+ }else{
+  front=Array.from({length:9},(_,i)=>`<circle class="ff" cx="${(i*41+13)%290+5}" cy="${62+(i*17)%48}" r="1.3" fill="#f3e07a" style="animation-delay:-${i*.7}s;animation-duration:${3+i%4}s"/>`).join('');
+ }
+ return {back,front}}
+function scene(pl){const h=hr()+(S.t%60)/60,day=mtIn()||(h>=6&&h<18),dawn=!mtIn()&&h>=5&&h<7,dusk=!mtIn()&&h>=18&&h<19.5,ink='#2b3036';
+ const [a,b]=dawn?['#f0c9a4','#a9c4d8']:day?['#b9dcea','#eaf2e0']:dusk?['#e59a7b','#55527f']:['#0f1530','#2b3764'];
+ const tt=day?(mtIn()?(h%12)/12:(h-6)/12):((h-18+24)%24)/12,x=24+tt*252,y=84-Math.sin(tt*Math.PI)*58;
+ const st=(!day&&!dusk)?[[30,18],[70,34],[118,12],[170,26],[214,14],[252,36],[98,44],[286,20]].map(s=>`<circle cx="${s[0]}" cy="${s[1]}" r="1.1" fill="#fff" opacity=".85" class="twk" style="animation-delay:${(s[0]%5)*.4}s"/>`).join(''):'';
+ const sun=(day||dawn)?`<circle cx="${x}" cy="${y}" r="11" fill="#f3d27a"/>`:`<circle cx="${x}" cy="${y}" r="9" fill="#e8ecf4"/><circle cx="${x+4}" cy="${y-2}" r="8" fill="${b}"/>`;
+ const lit=day?'#c9d6dc':'#f3d27a';let g='';
+ if(pl==='grass'){g=`<path d="M0 88 Q60 62 130 82 T300 74 V120 H0Z" fill="#8fb87a" stroke="${ink}"/><path d="M0 102 Q80 84 170 100 T300 94 V120 H0Z" fill="#79a566" stroke="${ink}"/>`;
+  for(let i=0;i<24;i++){const px=i*12+5,py=100+(i%3)*6;g+=`<path d="M${px} ${py}l-2 -6M${px} ${py}l1 -7M${px} ${py}l3 -5" stroke="${ink}" fill="none" stroke-width=".9"/>`}}
+ else if(pl==='lake'){g=`<path d="M0 72 L50 52 L100 68 L160 48 L220 66 L300 56 V82H0Z" fill="#9bb3a2" stroke="${ink}"/><rect y="78" width="300" height="42" fill="#6fa3bd"/>`;
+  for(let i=0;i<7;i++){const px=(i*47)%280+10,py=88+(i%3)*10;g+=`<path d="M${px} ${py}q5 -4 10 0t10 0" stroke="#e9f4f8" fill="none" stroke-width="1.2"/>`}
+  g+=`<path d="M12 80v-16M18 80v-22M24 80v-14M276 80v-18M282 80v-24" stroke="#5c6b3c" stroke-width="2" fill="none"/>`}
+ else if(pl==='forest'){g=`<rect y="100" width="300" height="20" fill="#3f6a47"/>`;
+  for(let i=0;i<8;i++){const px=18+i*37,r=15+(i%3)*3;g+=`<rect x="${px}" y="68" width="5" height="36" fill="#6b4f3a" stroke="${ink}" stroke-width=".8"/><circle cx="${px+2.5}" cy="${60-(i%2)*6}" r="${r}" fill="${i%2?'#3f7a56':'#2f6648'}" stroke="${ink}" stroke-width=".8"/>`}
+  g+=`<polygon points="140,112 150,100 160,112" fill="${day?'#9bb0c4':'#7fc8ff'}" stroke="${ink}"/>`}
+ else if(pl==='gorge'){g=`<polygon points="0,18 74,40 62,120 0,120" fill="#8c6a52" stroke="${ink}"/><polygon points="300,8 228,38 244,120 300,120" fill="#7b5b46" stroke="${ink}"/><rect y="100" width="300" height="20" fill="#6a5a46" stroke="${ink}"/><ellipse cx="150" cy="106" rx="44" ry="6" fill="#4f5a3a"/><path d="M126 102q4-12 8 0M156 101q4-12 8 0M176 103q4-10 8 0" stroke="#6b7a3a" fill="none"/><ellipse cx="150" cy="58" rx="16" ry="22" fill="#7fd1b9" fill-opacity=".3" stroke="#3a9a82" stroke-width="3"/>`}
+ else if(pl==='slope'){g=`<polygon points="0,100 130,38 300,76 300,120 0,120" fill="#a38a6d" stroke="${ink}"/>${[[70,86,7],[120,70,9],[190,78,6],[236,88,8],[160,96,5]].map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="${c[2]}" fill="#7d7266" stroke="${ink}"/>`).join('')}`}
+ else if(pl==='cliff'){g=`<polygon points="30,120 40,26 150,8 262,24 270,120" fill="#6e6a73" stroke="${ink}"/>${[30,52,74,96].map(y=>`<path d="M${44} ${y}l40 6l50 -6l60 8l60 -4" stroke="${ink}" fill="none" opacity=".5"/>`).join('')}<path d="M210 120v-40M214 120v-34" stroke="#c9b26a" stroke-width="2"/>`}
+ else if(pl==='cave'){g=`<rect width="300" height="120" fill="#1b2030"/><polygon points="0,0 60,0 40,34 20,18" fill="#2c3250"/><polygon points="300,0 220,0 250,40" fill="#2c3250"/>${[[60,104,10],[110,108,14],[190,102,12],[240,108,9]].map(c=>`<polygon points="${c[0]-c[2]/2},120 ${c[0]},${c[1]-c[2]*2} ${c[0]+c[2]/2},120" fill="#5cc8ff" fill-opacity=".75" stroke="#a9e6ff"/>`).join('')}<rect y="108" width="300" height="12" fill="#2a4a66" fill-opacity=".6"/>`}
+ else if(pl==='peak'){g=`<polygon points="20,120 150,12 280,120" fill="#cfd6de" stroke="${ink}"/><polygon points="112,52 150,12 188,52 170,46 150,58 130,46" fill="#fff" stroke="${ink}"/><path d="M10 40q40-8 80 0M200 28q40-8 90 2M30 70q30-6 60 0" stroke="#fff" stroke-width="2" fill="none" opacity=".8"/><circle cx="230" cy="96" r="10" fill="#6e6a73" stroke="${ink}"/>`}
+ else if(pl==='gate'){g=`<path d="M0 92 Q150 78 300 92 V120H0Z" fill="#8a9a7a" stroke="${ink}"/><ellipse cx="150" cy="68" rx="20" ry="28" fill="#7fd1b9" fill-opacity=".3" stroke="#3a9a82" stroke-width="3"/>
+  <polygon points="40,100 52,84 66,100" fill="#aab3a2" stroke="${ink}"/><polygon points="236,102 250,88 262,102" fill="#aab3a2" stroke="${ink}"/><path d="M20 90q8-20 14 0M270 92q8-22 14 0" fill="#3f7a56" stroke="${ink}"/>`}
+ else{g=`<rect y="96" width="300" height="24" fill="#8a9a7a" stroke="${ink}"/>`;
+  [[40,70],[120,64],[200,72]].forEach(p=>{g+=`<rect x="${p[0]}" y="${p[1]}" width="48" height="${100-p[1]}" fill="#d6c9a8" stroke="${ink}"/><polygon points="${p[0]-5},${p[1]} ${p[0]+24},${p[1]-22} ${p[0]+53},${p[1]}" fill="#9a5b45" stroke="${ink}"/><rect x="${p[0]+8}" y="${p[1]+10}" width="10" height="10" fill="${lit}" stroke="${ink}"/><rect x="${p[0]+28}" y="${p[1]+10}" width="10" height="10" fill="${lit}" stroke="${ink}"/>`})}
+ if(mtIn()&&S.rain>0&&pl!=='cave')g+='<g stroke="#6f93b5" stroke-width="1" opacity=".7">'+Array.from({length:32},(_,i)=>`<line x1="${i*9+3}" y1="${(i*23)%110}" x2="${i*9-1}" y2="${(i*23)%110+9}"/>`).join('')+'</g>';
+ const nm=pl==='home'?'人界':AREAS[pl],dg=pl==='home'?'':`　危險度：${mtIn()?(S.rain>0?'凶險':'侵蝕'):ghostOn()?'亡魂守夜':day?'微弱':'侵蝕'}`;
+const amb=ambient(day,dusk,pl);
+ const arrC=(lastPl!==pl)?' arr':'';lastPl=pl;
+ return `<div class="scene${arrC}"><svg viewBox="0 0 300 120" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${nm}的風景"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="300" height="120" fill="url(#sk)"/>${st}${sun}${sun&&day?`<circle cx="${x}" cy="${y}" r="17" fill="#f3d27a" opacity=".25" class="glow"/>`:''}${amb.back}${g}${amb.front}<rect y="56" width="300" height="64" fill="#050a24" opacity="${(day||dawn)?0:dusk?.15:.38}"/>${ghostOn()?'<g class="ghg"><ellipse cx="0" cy="88" rx="24" ry="8" fill="#cfe8ff" opacity=".3"/><ellipse cx="-14" cy="90" rx="16" ry="5" fill="#cfe8ff" opacity=".2"/><circle cx="15" cy="82" r="6.5" fill="#e4f2ff" opacity=".5"/><circle cx="18" cy="80.5" r="1.1" fill="#fff"/></g>':''}${S.meteor===pl?'<g><circle cx="205" cy="98" r="3" fill="#e8f4ff"/><circle class="pulse" cx="205" cy="98" r="8" fill="none" stroke="#9fd0ff" stroke-width="1.5"/></g>':''}${S.flash?'<line class="meteor" x1="230" y1="8" x2="170" y2="50" stroke="#fff" stroke-width="2" stroke-linecap="round"/>':''}</svg><div class="cap"><b>${nm}</b><span>${clock()}${dg}</span></div></div>`}
+
+
+// ===== 裝備欄 =====
+const SLOT={blade:'weapon',obblade:'weapon',armor:'body',exo:'body',crown:'head',bracelet:'wrist',rod:'rod',hook:'climb'},SLN={weapon:'武器',body:'護甲',head:'頭飾',wrist:'手飾',rod:'釣具',climb:'攀登工具'};
+const GO=k=>!!(S.owned&&S.owned[k]);
+function migGear(){if(S.muSeen===undefined)S.muSeen=(DR('mu').some(d=>S.dex[d[0]])||(S.visited&&!S.mtSeen))?1:0;
+ if(!S.owned)S.owned={};for(const k in S.gear)if(S.gear[k])S.owned[k]=1;
+ if(S.boneGot&&!S.brFixed&&!GO('bracelet')&&S.loc==='home'&&!cnt('bones')){S.brFixed=1;S.owned.bracelet=1;if(!gearConf('bracelet'))S.gear.bracelet=1;log('系統補發了一件「獸骨手鐲（亡靈）」。')}
+ [['obblade','blade'],['exo','armor']].forEach(([hi,lo])=>{if(S.gear[hi]&&S.gear[lo])S.gear[lo]=0})}
+function gearConf(k){return Object.keys(S.gear).find(x=>S.gear[x]&&x!==k&&SLOT[x]===SLOT[k])}
+function gearGet(k,name){S.owned[k]=1;const c=gearConf(k);if(!c){S.gear[k]=1;log(`打造完成：${name}，已自動裝備。`)}else log(`打造完成：${name}。同類型的「${GN['g_'+c]}」正在裝備中，請到探索者小屋更換。`)}
+function equip(k){const c=gearConf(k);if(!GO(k))return;if(c){log(`同類型的「${GN['g_'+c]}」已裝備，請先卸下。`);return R()}S.gear[k]=1;log(`已裝備：${GN['g_'+k]}。`);R()}
+function unequip(k){S.gear[k]=0;log(`已卸下：${GN['g_'+k]}。`);R()}
+function unequipAll(){for(const k in S.gear)S.gear[k]=0;log('已卸下全部裝備。');R()}
+// ===== 山界 =====
+const rl=d=>d[8]||'mu',DR=r=>D.filter(d=>rl(d)===r);
+const mtIn=()=>S.loc==='realm'&&S.realm==='mt';
+const maxE=()=>100-(S.hyp||0);
+const dtot=()=>(S.muSeen?26:0)+(S.mtSeen?29:0);
+I.silk.n='玄脈山絲綢鳥（雄）';I.silkf={n:'玄脈山絲綢鳥（雌）',p:530,cat:'鳥類',r:'珍奇'};
+Object.assign(I,{antid:{n:'解毒藥',p:0,cat:'消耗',r:'稀少',anti:1},anes:{n:'麻醉藥',p:0,cat:'消耗',r:'稀少',anes:1},kit:{n:'治療包',p:0,cat:'消耗',r:'稀少',cure:1},o2:{n:'氧氣瓶',p:0,cat:'消耗',r:'稀少',o2:1}});
+RF.hook={quartz:3,maoc:1};RF.exo={croc:1,osseo:3};RF.obblade={obsid:3,maoc:2};const showOb=()=>!!(S.dex.obsid||cnt('obsid')||GO('obblade'));I.croc.n='擬岩鱷皮';I.swallow.n='腐臭高山燕排泄物';const showExo=()=>!!(S.dex.croc||S.dex.osseo||cnt('croc')||cnt('osseo')||GO('exo'));RD.kit={c10k:1,c100:1};RD.antid={c100:3};RD.anes={lily:2,drought:1};RD.o2={oxy:3};
+let mtT=null,rk=null,mres=null;
+const LN=['左','中','右'];
+function mtReset(){clearTimeout(mtT);rk=null;qt=null;S.poison=0;S.frac=0;S.numb=0;batStop();S.hyp=0;S.hypC=0;S.rain=0;S.quake=0;S.fogN=0}
+function mtArm(ms,fn){clearTimeout(mtT);mtT=setTimeout(()=>{mtT=null;fn()},ms)}
+function mtAdv(){if(!mtIn())return;
+ if(S.rain>0){S.rain-=30;if(S.rain<=0){S.rain=0;log('🌤 雨停了，危險度回到「侵蝕」。')}}
+ else if(Math.random()<.02){S.rain=300;unlock('erain');log('🌧 久違的甘露！雨水沖刷著山壁，危險度升至「凶險」。')}
+ if(S.quake>0)S.quake--;else if(Math.random()<.008){S.quake=4;unlock('equake');sfx('thud');setTimeout(()=>sfx('thud'),450);try{navigator.vibrate&&navigator.vibrate([300,80,200,80,150])}catch(e){}log('🌋 地牛翻身！大地劇烈震顫，大怒坡的落石變多了，似乎也喚醒了沉睡的巨獸。')}
+ if(S.place==='cliff'||S.place==='peak'){S.hypC++;if(S.hypC>=3){S.hypC=0;S.hyp+=6;log(`😮‍💨 氧氣稀薄！體力上限 -6（現在 ${maxE()}）。`);if(!S.hypW){S.hypW=1;notice('氧氣稀薄','你爬到了空氣稀薄的高度。每行動三次，體力上限就會下降 6 點。在上限歸零前下山，或用氧氣瓶（花嬸用三顆解氧石調製）恢復。')}}}}
+function mtTick(){if(!mtIn())return;
+ if(S.hyp>=100){S.energy=0;S.dieMsg='高山缺氧，你的體力上限歸零，昏倒在山壁間。';return}
+ if(S.energy>maxE())S.energy=maxE();
+ if(S.energy>0&&S.place==='gorge'&&S.energy<20&&Math.random()<(S.gear.bracelet?.1:.3)){const d=S.gear.armor?6:8;S.energy-=d;unlock('vulture');S.hitMsg=`【深淵食骨鷲】盯上了體力不支的你，俯衝而下！體力 -${d}。`;log(`⚔ 深淵食骨鷲俯衝而下！體力 -${d}${S.gear.bracelet?'（獸骨手鐲鎮攝，傷害已降低機率）':''}`)}
+ if(S.energy>0&&S.place==='peak'&&!S.pend&&Math.random()<(S.rain>0?.4:.25))windStart();
+ if(S.energy>0&&S.place==='cave'&&!S.pend&&Math.random()<.14){if(Math.random()<.5)batStart();else centiHit()}}
+function mtLeave(){if(!spend(3)){R();return}goHome('傳送門順利啟動，你回到人界。');R()}
+function goMt(p){const up={gorge:['slope'],slope:['cliff'],cliff:['peak'],cave:[],peak:[]}[S.place].includes(p),c=mv()*(up?2:1);
+ if(!spend(c)){R();return}if(S.pend){R();return}
+ if(S.place==='slope'&&p==='cliff'){rockStart();return}
+ S.place=p;log(`你${up?'向上攀往':'前往'}${AREAS[p]}${up?`（體力消耗加倍，-${c}）`:''}。`);R()}
+// 落石
+const rkLanes=w=>{const a=Math.floor(Math.random()*3);if(!(w>=4||(w>=2&&Math.random()<.5)))return [a];let b;do b=Math.floor(Math.random()*3);while(b===a);return [a,b]};
+function mtWarnFx(){document.body.classList.add('rkw');setTimeout(()=>document.body.classList.remove('rkw'),1050);sfx('warn');try{navigator.vibrate&&navigator.vibrate([70,40,70])}catch(e){}}
+function mtHitFx(rocks){hitFlash();const m=$('#main');m.classList.remove('shake','bigshake');void m.offsetWidth;m.classList.add('bigshake');sfx('thud');try{navigator.vibrate&&navigator.vibrate([200,60,120])}catch(e){}
+ if(rocks&&!matchMedia('(prefers-reduced-motion: reduce)').matches)showFx(Array.from({length:14},(_,i)=>`<i class="dbr" style="left:${i*7+Math.random()*4}vw;animation-delay:${(Math.random()*.35).toFixed(2)}s">●</i>`).join(''),1500)}
+let mtT2=null;const rockWin=()=>Math.max(1000,2000-(rk.w-1)*200)-(S.rain>0?350:0);
+function rockStart(){rk={w:1,n:4+(S.quake>0?2:0),lanes:rkLanes(1)};S.pend='rockintro';log('⛰ 山坡上方傳來隆隆巨響，落石滾落！');sfx('thud');setTimeout(()=>{if(S.pend==='rockintro')sfx('thud')},900);
+ showFx('<div class="blk"><b>轟隆！</b><b class="b2">轟隆！</b></div>',2100);mtArm(2100,()=>{if(S.pend==='rockintro'){S.pend='rock';rockArm();R()}});R()}
+function rockArm(){mtArm(rockWin(),()=>{if(S.pend==='rock')rockHit()});clearTimeout(mtT2);mtWarnFx();mtT2=setTimeout(()=>{const e=document.getElementById('rkwarn');if(e&&S.pend==='rock')e.textContent='……落石在哪一側？快躲！'},750)}
+function rockPick(l){if(S.pend!=='rock'||!rk)return;clearTimeout(mtT2);if(rk.lanes.includes(l))return rockHit();
+ clearTimeout(mtT);if(rk.w>=rk.n){rk=null;S.place='cliff';log('你躲過了所有落石，登上嶽嵒峭。');return mtShow('全部躲開了！','你躲過了所有落石，成功登上嶽嵒峭。',1)}
+ const w=rk.w;mtShow('躲開了！',`第 ${w} 波落石擦身而過。下一波馬上就來，準備好再繼續。`,1,()=>{rk.w++;rk.lanes=rkLanes(rk.w);S.pend='rock';rockArm()})}
+function rockHit(){clearTimeout(mtT);clearTimeout(mtT2);rk=null;unlock('erock');const d=Math.ceil(S.energy*(S.gear.armor?.4:.48));S.energy-=d;log(`💥 你被落石擊中，體力 -${d}！`);
+ if(S.energy<=0){S.pend=null;die('你被落石砸中，滾落山坡。');R();mtHitFx(1);return}
+ let m=`你被落石擊中，體力 -${d}。`;if(Math.random()<.4){S.frac=1;m+='骨頭裂了！之後每次行動多扣 5 點體力，必須使用治療包（萬年苜蓿×1、百年苜蓿×1，花嬸調製）才能治好。';log('🦴 骨裂！之後每次行動多扣 5 點體力，需要治療包才能治好。')}
+ mtShow('被落石擊中了！',m,0,null,d,1)}
+function mtShow(t,m,ok,fn,dmg,rocks){mres={t,m,ok,t0:Date.now(),fn,dmg};S.pend='mtres';setTimeout(()=>{if(S.pend==='mtres')R()},1100);R();if(dmg)mtHitFx(rocks)}
+function mtGo(){const f=mres&&mres.fn;mres=null;S.pend=null;f&&f();R()}
+// 強風
+function windStart(){unlock('ewind');S.pend='wind';log('💨 山頂颳起狂風！快躲到巨石後面！');mtArm(1900,windFall);}
+function windHide(){if(S.pend!=='wind')return;clearTimeout(mtT);log('你及時躲到巨石後面，狂風從身旁呼嘯而過。');mtShow('躲過了！','你及時躲到巨石後面，狂風從身旁呼嘯而過。',1)}
+function windFall(){if(S.pend!=='wind')return;S.pend=null;S.place='cliff';S.energy-=12;log('💨 你被狂風吹下了山頂，回到嶽嵒峭，體力 -12。');if(S.energy<=0){die('你被狂風吹落山崖。');return R()}mtShow('被吹下山頂了','你沒來得及躲開，被狂風吹回嶽嵒峭，體力 -12。',0,null,12)}
+// 旱災擬岩鱷
+function crocProbe(){if(!spend(8)){R();return}
+ if(ch(S.rain>0?.45:.28)){unlock('croc');S.pend='croc';log('🐊 泥潭猛地炸開，旱災擬岩鱷撲了出來！快閃開！');mtArm(S.rain>0?1100:1500,crocBite)}else log('泥潭表面平靜，只有旱魃草在風中搖晃。');R()}
+function crocDodge(){if(S.pend!=='croc')return;clearTimeout(mtT);unlock('ecroc');log('你向旁翻滾，鱷口擦身而過——驚險逃生！');mtShow('驚險逃生！','你向旁翻滾，鱷口擦身而過。',1)}
+function crocBite(){if(S.pend!=='croc')return;S.pend=null;const d=S.gear.armor?45:55;S.energy-=d;log(`🐊 你被旱災擬岩鱷咬中，體力 -${d}！`);if(S.energy<=0){die('你被旱災擬岩鱷拖進了泥潭。');return R()}mtShow('被咬中了！',`旱災擬岩鱷咬中了你，體力 -${d}。`,0,null,d)}
+// 迷霧
+let qt=null;
+const QR=[{w:.12,v:1/1000,f:0},{w:.10,v:1/880,f:1},{w:.08,v:1/780,f:2},{w:.065,v:1/700,f:3}],QFAKE=['校準？','較準！','校淮！','交準！','校準!','枝準！'];
+const qtePos=e=>{const x=(e*qt.v)%2;return x<1?x:2-x};
+const qteVeil=()=>{const m=(Date.now()-qt.m0)%2000,d=450+qt.hits*150,h=d/2;return Math.max(0,Math.min(1,1-(Math.abs(m-(1790-h))-h)/110))};
+function qtePrep(){const r=QR[Math.min(qt.hits,QR.length-1)];qt.v=r.v;qt.w=r.w;qt.t0=Date.now();qt.lock=Date.now()+(qt.hits?400:250);
+ const zs=[],n=1+r.f;let tries=0;while(zs.length<n&&tries++<400){const c=r.w/2+.02+Math.random()*(1-r.w-.04);if(zs.every(z=>Math.abs(z.c-c)>r.w*1.5))zs.push({c,real:0})}
+ while(zs.length<n)zs.push({c:Math.random(),real:0});zs[Math.floor(Math.random()*zs.length)].real=1;qt.zones=zs}
+function fogStart(){if(!spend(mv()*2)){R();return}if(S.pend){R();return}unlock('efog');qt={hits:0,need:QR.length,m0:Date.now(),lid:0,zones:[]};qtePrep();S.pend='qte';log('🌫 通往頂峰的路上白霧瀰漫，四周什麼都看不清。');R()}
+function qteFall(why){qt=null;S.pend=null;S.place='cliff';S.energy-=15;log('🌫 你在白霧中失足，滑回嶽嵒峭，體力 -15。');if(S.energy<=0){die('你在白霧中失足，跌落山崖。');return R()}mtShow('失足滑落！',why,0,null,15)}
+function qtePress(){if(S.pend!=='qte'||!qt||Date.now()<qt.lock)return;
+ if(!spend(3)){qt=null;return R()}
+ const p=qtePos(Date.now()-qt.t0),z=qt.zones.find(z=>Math.abs(p-z.c)<=qt.w/2);
+ if(!z)return qteFall('時機偏了，一腳踩空，滑回嶽嵒峭，體力 -15。');
+ if(!z.real)return qteFall('你踩進了假的落腳點，腳下一空，滑回嶽嵒峭，體力 -15。');
+ qt.hits++;if(qt.hits>=qt.need){qt=null;S.place='peak';S.pend=null;log('霧氣散去，你站上了玄脈山頂峰。');return mtShow('登頂成功！','白霧在腳下散開，你站上了玄脈山頂峰。',1)}
+ qtePrep();qt.msg='✔ 踩穩了！';R()}
+function qteLoop(id){if(S.pend!=='qte'||!qt||qt.lid!==id)return;let v=document.getElementById('fogveil');if(!v){v=document.createElement('div');v.id='fogveil';document.body.appendChild(v)}
+ const e=Date.now()-qt.t0,mk=document.getElementById('qmk');if(mk)mk.style.left=(qtePos(e)*100)+'%';v.style.opacity=qteVeil();requestAnimationFrame(()=>qteLoop(id))}
+// ===== 泉流洞襲擊 =====
+let qb=null;
+function eyeEl(){let v=document.getElementById('blinkv');if(!v){v=document.createElement('div');v.id='blinkv';document.body.appendChild(v)}return v}
+function blackOn(on){eyeEl().style.opacity=on?1:0}
+function blinkFx(){const v=eyeEl();v.style.opacity=1;setTimeout(()=>{if(!(qb&&qb.phase==='black'))v.style.opacity=0},280)}
+setInterval(()=>{if(S.poison>0&&!S.pend&&S.loc==='realm')blinkFx()},3000);
+function centiHit(){const d=S.gear.armor?4:6;S.energy-=d;unlock('centi');S.hitMsg=`【琳琅百足】從岩縫裡竄出來咬了你一口！體力 -${d}。`;log(`⚔ 琳琅百足從岩縫竄出，咬了你一口！體力 -${d}。`);
+ if(Math.random()<.55){S.poison=8;log('☠ 你中毒了！接下來 8 次行動每次多扣 3 點體力，狩獵成功率大幅下降，視線也會時不時發黑。');S.hitMsg+='　你中毒了：8 次行動內每次多扣 3 點體力，狩獵成功率大幅下降。'}}
+function batStop(){if(qb){clearTimeout(qb.tm);qb.lid=-1}qb=null;try{blackOn(false)}catch(e){}const so=document.getElementById('sonar');if(so)so.remove()}
+function batStart(){if(S.pend)return;unlock('bat');qb={p:0,hold:false,phase:'intro',lid:0,tm:null};S.pend='batintro';log('🦇 洞穴深處傳來尖細的聲音……');sfx('squeak');setTimeout(()=>sfx('squeak'),700);
+ showFx('<div class="blk bat"><b>吱吱……</b><b class="b2">吱吱……</b></div>',2300);mtArm(2300,()=>{if(S.pend==='batintro'&&qb){S.pend='bat';qb.phase='go';batNext();R()}})}
+function batNext(){clearTimeout(qb.tm);qb.tm=setTimeout(batWarn,1800+Math.random()*1700)}
+function sonarFx(){const o=document.getElementById('sonar');if(o)o.remove();const d=document.createElement('div');d.id='sonar';d.innerHTML='<i></i><i></i><i></i>';document.body.appendChild(d);setTimeout(()=>d.remove(),1100)}
+function batWarn(){if(S.pend!=='bat'||!qb)return;qb.phase='warn';sonarFx();sfx('squeak');setTimeout(()=>sfx('squeak'),330);showFx('<div class="sq">吱吱……</div>',950);qb.tm=setTimeout(batBlack,900)}
+function batBlack(){if(S.pend!=='bat'||!qb)return;qb.phase='black';blackOn(true);if(qb.hold)return batCaught();
+ qb.tm=setTimeout(()=>{if(!qb)return;blackOn(false);qb.phase='go';batNext()},1500)}
+function batHold(v,e){if(S.pend!=='bat'||!qb)return;if(v){if(qb.phase==='black')return batCaught();qb.hold=true;try{e&&e.target.setPointerCapture&&e.target.setPointerCapture(e.pointerId)}catch(x){}}else qb.hold=false}
+function batWin(){batStop();log('🦇 你屏住呼吸，悄悄溜出了伏翼的聽力範圍。');mtShow('逃脫成功！','你輕聲細語地退出了伏翼的聽力範圍。',1)}
+function batCaught(){batStop();S.energy-=20;log('⚔ 你在黑暗中被巨型走地伏翼發現了！體力 -20。');if(S.energy<=0){S.pend=null;die('你被巨型走地伏翼撲倒在洞穴裡。');R();return}mtShow('被發現了！','黑屏期間你還沒鬆手，巨型走地伏翼循著聲響撲了過來，體力 -20。',0,null,20)}
+function batLoop(id,t0){if(!qb||qb.lid!==id||S.pend!=='bat')return;const now=Date.now(),dt=now-t0;if(qb.hold&&qb.phase==='go'){qb.p=Math.min(1,qb.p+dt/7000);const f=document.getElementById('batfill');if(f)f.style.width=(qb.p*100)+'%';if(qb.p>=1)return batWin()}requestAnimationFrame(()=>batLoop(id,now))}
+function fogBack(){qt=null;S.pend=null;S.pend=null;S.place='cliff';log('你退回嶽嵒峭。');R()}
+function mtActs(){const p=S.place,a=[],hk=!!S.gear.hook,B=(t,s,f,dis)=>a.push({t,s,f,dis});
+ if(p==='gorge'){
+  B('採集解氧石','體力 -6',()=>gather('oxy',6,.8));
+  B('採集屍骨簇','體力 -7',()=>gather('osseo',7,.6));
+  B('採集莽原旱魃草','體力 -5',()=>gather('drought',5,.9));
+  B('捕捉遠行青蝗','體力 -5',()=>gather('locust',5,.6));
+  B('狩獵君主大角羊','體力 -14',()=>hunt('goat',.4,14));
+  B('狩獵深淵食骨鷲','體力 -16・高空獵物',()=>hunt('vulture',.15,16));
+  B('探查泥潭','體力 -8・潛伏著什麼',crocProbe);
+  B('狩獵旱災擬岩鱷','體力 -22・九死一生',()=>hunt('croc',.1,22));
+  B('啟動傳送門返回人界','體力 -3',mtLeave)}
+ if(p==='slope'){
+  B('採集莽原旱魃草','體力 -5',()=>gather('drought',5,.9));
+  B('狩獵君主大角羊','體力 -14',()=>hunt('goat',.4,14))}
+ if(p==='cliff'){
+  B('採集木茅','體力 -6',()=>gather('maoc',6,.9));
+  B('開採奧古斯精鐵礦','體力 -8・下層岩壁',()=>gather('iron',8,.35));
+  B('攀上岩壁開採地獄黑曜石','體力 -16・需攀岩鉤・極稀少',()=>gather('obsid',16,.12),!hk);
+  B('狩獵君主大角羊','體力 -14・主要棲地',()=>hunt('goat',.5,14));
+  B('狩獵匕首山貓','體力 -15',()=>hunt('dagger',.25,15));
+  B('挖掘地脈石龍子','體力 -8',()=>gather('skink',8,.45));
+  B('採集腐臭高山燕的排泄物','體力 -6・無法捕捉',()=>gather('swallow',6,.6));
+  B('狩獵兇猛鋼刀隼','體力 -14・巢穴在絕壁',()=>hunt('falcon',.18,14));
+  B('攀向玄脈山頂峰',`體力 -${mv()*2}・需攀岩鉤・白霧中校準落腳`,fogStart,!hk)}
+ if(p==='peak'){
+  B('採集頂點圓柏','體力 -12・稀少',()=>gather('juniper',12,.1));
+  B('開採統天寶玉','體力 -16・極極稀少',()=>gather('jade',16,.015));
+  B('狩獵玄脈山絲綢鳥','體力 -12・捕獲時雄雌各半',()=>{const b=S.inv.silk||0;hunt('silk',.2,12,()=>{if((S.inv.silk||0)<=b)return;if(Math.random()<.5){log('這是一隻雄鳥，擁有絲綢般的長尾羽（賣 600 界幣）。')}else{take('silk');add('silkf');log('這是一隻雌鳥，羽色樸素（賣 530 界幣）。')}})});
+  B('採集阿貝拉多釘蟲','體力 -5',()=>gather('nail',5,.7))}
+ if(p==='cave'){
+  B('採集洞穴海藍水晶','體力 -12・極稀少',()=>gather('sapph',12,.12));
+  B('狩獵巨型走地伏翼','體力 -18・非常難對付',()=>hunt('bat',.18,18));
+  B('捕捉琳琅百足','體力 -12',()=>hunt('centi',.3,12));
+  B('狩獵泰坦錘尾蠍虎','體力 -20・極稀少',()=>hunt('gecko',.07,20));
+  B('潛入深潭','體力 -14・沉睡的巨獸',()=>{if(!spend(14)){R();return}if(ch(S.quake>0?.25:.03)){unlock('sal');add('sal');log('🌊 深潭泛起波紋，一道巨大的影子緩緩游過……你取得了【泉流洞大鯢】的黏液！')}else log('深潭靜得像一面鏡子。');R()})}
+ return a}
+function mtBar(){if(!mtIn())return '';const r=S.rain>0,hi=S.place==='cliff'||S.place==='peak';
+ return `<div class="card nightbar"><b>${r?'🌧 降雨・危險度：凶險':'☀ 終年日照・危險度：侵蝕'}</b><br><span class="mute">山界沒有夜晚。向上攀爬體力消耗加倍。${hi?'<b>⚠ 氧氣稀薄：每行動 3 次體力上限 -6。</b>':''}${S.place==='gorge'?'體力低於 20 時，食骨鷲會來襲。':''}${S.place==='cave'?'洞裡的生物可能襲擊你：琳琅百足會讓你中毒，巨型走地伏翼要靜步逃脫。':''}${r?'下雨：移動多耗 20%，落石與泥潭更危險。':''}${S.quake>0?'<b>大地仍在震顫。</b>':''}</span></div>`}
+function mtView(){
+ if(S.pend==='mtres'&&mres){const dis=Date.now()-mres.t0<1000;return `<div class="card ${mres.ok?'':'alert'}" style="text-align:center"><h2 class="${mres.ok?'':'red'}">${mres.t}</h2>${mres.dmg?`<div class="dmg">-${mres.dmg}</div>`:''}<p>${mres.m}</p>${B('繼續','mtGo()',{c:'pri big',d:dis})}</div>`}
+ if(S.pend==='rock'&&rk)return `<div class="card alert"><h2 class="red">⚠ 落石！第 ${rk.w}/${rk.n} 波</h2><p class="mtwarn" id="rkwarn">巨石正從【${rk.lanes.map(i=>LN[i]).join('、')}側】滾落！</p><p class="sub">躲向沒有落石的一側。警告很快會消失，要記住位置。越後面越快，也會同時落在兩側。被擊中會損失將近一半體力，並可能骨裂。</p><div class="tugbar mtbar" style="--d:${rockWin()/1000}s"><i></i></div><div class="grid">${LN.map((n,i)=>B('躲到'+n+'側',`rockPick(${i})`,{c:'pri big'})).join('')}</div></div>`;
+ if(S.pend==='wind')return `<div class="card alert"><h2 class="red">💨 狂風！</h2><p class="mtwarn">快躲到巨石後面！</p><div class="tugbar mtbar" style="--d:1.9s"><i></i></div>${B('躲到巨石後','windHide()',{c:'pri big'})}</div>`;
+ if(S.pend==='croc')return `<div class="card alert"><h2 class="red">🐊 旱災擬岩鱷！</h2><p class="mtwarn">泥潭炸開了！</p><div class="tugbar mtbar" style="--d:${S.rain>0?1.1:1.5}s"><i></i></div>${B('閃避！','crocDodge()',{c:'pri big'})}</div>`;
+ if(S.pend==='batintro')return `<div class="card alert" style="text-align:center"><h2 class="red">🦇 吱吱……</h2><p class="sub">黑暗中有什麼在聽著你。</p></div>`;
+ if(S.pend==='bat'&&qb){qb.lid++;const id=qb.lid;setTimeout(()=>batLoop(id,Date.now()),0);return `<div class="card alert" style="text-align:center"><h2 class="red">🦇 巨型走地伏翼</h2><p class="sub" id="batmsg">牠看不見，但聽得見。按住「靜步」悄悄離開，進度滿了就逃脫。</p><div class="tugbar"><i id="batfill" style="width:${qb.p*100}%"></i></div><button class="btn pri big" id="batbtn" style="touch-action:none;user-select:none;-webkit-user-select:none" onpointerdown="batHold(1,event)" onpointerup="batHold(0)" onpointercancel="batHold(0)" oncontextmenu="return false">按住：靜步</button></div>`}
+ if(S.pend==='rockintro')return `<div class="card alert" style="text-align:center"><h2 class="red">⚠ 落石！</h2><p class="sub">山坡上方傳來隆隆巨響……</p></div>`;
+ if(S.pend==='qte'&&qt){qt.lid++;const id=qt.lid;setTimeout(()=>qteLoop(id),0);return `<div class="card alert fogcard" style="text-align:center"><h2>白霧中的攀登</h2><p class="sub">只有眼前這一小塊看得清。標記進入綠色落腳點時按下「校準！」。落腳點不只一個，顏色較淡的是假的。白霧每兩秒就會吞沒一切。一步踩錯就會直接滑落。</p><p class="mtwarn" style="color:#2b3036">第 ${qt.hits+1}/${qt.need} 步</p><p class="sub" style="min-height:1.4em">${qt.msg||'&nbsp;'}</p><div class="qbar">${qt.zones.map(z=>`<div class="qz${z.real?'':' fk'}" style="left:${(z.c-qt.w/2)*100}%;width:${qt.w*100}%"></div>`).join('')}<div class="qmk" id="qmk"></div></div><div class="grid" style="margin-top:12px">${B('校準！','qtePress()',{c:'pri big'})}</div><div class="grid" style="margin-top:8px">${B('退回嶽嵒峭','fogBack()')}</div></div>`}
+ S.pend=null;
+ const acts=mtActs(),MV={gorge:['slope','cave'],slope:['gorge','cliff'],cliff:['slope'],cave:['gorge'],peak:['cliff']}[S.place],UP={slope:['cliff'],gorge:['slope']}[S.place]||[];
+ const DS={gorge:'山界的初始地，傳送門所在。裂谷的泥潭裡潛伏著什麼，頭頂還有盤旋的食骨鷲。',slope:'通往嶽嵒峭的過渡坡地，隨時有落石滾落。',cliff:'陡峭的岩壁。需要攀岩鉤才能繼續往上。這裡的空氣已經很稀薄。',cave:'潮濕黑暗的洞穴，發光的水晶與深潭。',peak:'玄脈山頂峰，強風不斷，空氣極度稀薄。'};
+ return `<div class="card"><h2>${AREAS[S.place]}</h2><p class="sub">${DS[S.place]}</p><div class="grid">${acts.map((a,i)=>B(a.t,`A(${i})`,{s:a.s,d:a.dis})).join('')}</div></div>
+ <div class="card"><h3>移動</h3><div class="grid">${MV.map(k=>{const up=['slope','cliff','peak'].includes(k)&&['gorge','slope','cliff'].includes(S.place)&&(S.place==='gorge'&&k==='slope'||S.place==='slope'&&k==='cliff'),c=mv()*(up?2:1);return B(AREAS[k]+(up?' ↑':''),`goMt('${k}')`,{s:`體力 -${c}${up?'（向上，加倍）':''}`})}).join('')}</div></div>`}
+function mtIntro(){return `<div class="card"><h2>山界</h2><p class="sub">危險度：侵蝕 ／ 凶險（下雨天）</p><p style="margin:0 0 8px">由連綿不絕的山脈組成，終年日照、沒有夜晚，久久才下一次雨（讓環境變得更危險）。礦產豐富，但路況崎嶇、隨時可能喪命，只能一步一步慢慢來。越往上海拔越高，空氣越稀薄，垂直向上攀爬會消耗雙倍體力。</p>
+ <dl class="rd"><dt>界中地區</dt><dd>峽之間（初始生成地）、大怒坡、嶽嵒峭、泉流洞、玄脈山頂峰</dd><dt>高海拔現象：缺氧</dt><dd>爬到特定高度後，每行動三次體力上限 -6。需在上限歸零前下山，或使用氧氣瓶（三顆解氧石製成）。</dd><dt>峽之間</dt><dd>體力低於 20 時，有 30% 機率遭深淵食骨鷲攻擊（獸骨手鐲可降低機率）。</dd><dt>大怒坡</dt><dd>落石會阻撓前進，必須躲避。被擊中損失將近一半體力，40% 機率骨裂（每次行動多扣 5 點，需治療包）。</dd><dt>嶽嵒峭與頂峰</dt><dd>岩壁需要攀岩鉤。通往頂峰的路白霧瀰漫，要在霧中校準落腳點（四步，落腳點有真有假，踩錯一步就直接滑回嶽嵒峭）；頂峰強風吹起時，必須及時躲到巨石後面。</dd></dl></div>`}
+
+const $=s=>document.querySelector(s);
+load();if(S.pend==='tug'||S.pend==='tugend'||S.pend==='bat'||S.pend==='batintro'||S.pend==='rock'||S.pend==='rockintro'||S.pend==='wind'||S.pend==='croc'||S.pend==='mtres'||S.pend==='qte'||S.pend==='fog')S.pend=null;R();setInterval(()=>{if(S.jail&&S.jail<=Date.now()){R();return}if(tab==='act'&&(S.jail>Date.now()||(S.view==='shen'||S.view==='museum')&&S.loc==='home'||S.view==='town'&&S.loc==='home'&&!S.cut&&JSON.stringify(badges())!==lastSig))R()},1000);
+</script>
+
+</body>
+</html>
